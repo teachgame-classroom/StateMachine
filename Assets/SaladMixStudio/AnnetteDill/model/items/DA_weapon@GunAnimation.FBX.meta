@@ -1,0 +1,740 @@
+fileFormatVersion: 2
+guid: c38c1e7dcf7df4b44ae403cf7cbbd913
+timeCreated: 1436359206
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: B_cylinder
+    100002: B_cylinderLock
+    100004: B_frontBody
+    100006: B_gunRoot
+    100008: B_hammer
+    100010: B_safty
+    100012: B_trigger
+    100014: ctrl_Master
+    100016: ctrl_Master1
+    100018: ctrl_PositionSelector
+    100020: ctrl_Rot
+    100022: //RootNode
+    400000: B_cylinder
+    400002: B_cylinderLock
+    400004: B_frontBody
+    400006: B_gunRoot
+    400008: B_hammer
+    400010: B_safty
+    400012: B_trigger
+    400014: ctrl_Master
+    400016: ctrl_Master1
+    400018: ctrl_PositionSelector
+    400020: ctrl_Rot
+    400022: //RootNode
+    7400000: GunIdle
+    7400002: safty_Lock
+    7400004: safty_Unlock
+    7400006: hammer_set
+    7400008: pullTrigger_hammerSetted
+    7400010: pullTrigger_hammerNotSetted
+    7400012: returnTrigger
+    7400014: cylinderOpen
+    7400016: cylinderClose
+    7400018: cylinderRotation_00
+    7400020: cylinderRotation_01
+    7400022: cylinderRotation_02
+    7400024: cylinderRotation_03
+    7400026: cylinderRotation_04
+    7400028: cylinderRotation_05
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: GunIdle
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 5
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 1
+      - path: B_gunRoot/B_frontBody
+        weight: 1
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: safty_Lock
+      takeName: Take 001
+      firstFrame: 10
+      lastFrame: 20
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: safty_Unlock
+      takeName: Take 001
+      firstFrame: 20
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: hammer_set
+      takeName: Take 001
+      firstFrame: 30
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: pullTrigger_hammerSetted
+      takeName: Take 001
+      firstFrame: 40
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: pullTrigger_hammerNotSetted
+      takeName: Take 001
+      firstFrame: 55
+      lastFrame: 65
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: returnTrigger
+      takeName: Take 001
+      firstFrame: 70
+      lastFrame: 75
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderOpen
+      takeName: Take 001
+      firstFrame: 80
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 1
+      - path: B_gunRoot/B_frontBody
+        weight: 1
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderClose
+      takeName: Take 001
+      firstFrame: 100
+      lastFrame: 115
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 1
+      - path: B_gunRoot/B_cylinderLock
+        weight: 1
+      - path: B_gunRoot/B_frontBody
+        weight: 1
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 0
+      - path: B_gunRoot/B_hammer
+        weight: 1
+      - path: B_gunRoot/B_safty
+        weight: 1
+      - path: B_gunRoot/B_trigger
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderRotation_00
+      takeName: Take 001
+      firstFrame: 120
+      lastFrame: 130
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 1
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 0
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderRotation_01
+      takeName: Take 001
+      firstFrame: 135
+      lastFrame: 145
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 1
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 0
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderRotation_02
+      takeName: Take 001
+      firstFrame: 150
+      lastFrame: 160
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 1
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 0
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderRotation_03
+      takeName: Take 001
+      firstFrame: 165
+      lastFrame: 175
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 1
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 0
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderRotation_04
+      takeName: Take 001
+      firstFrame: 180
+      lastFrame: 190
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 1
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 0
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: cylinderRotation_05
+      takeName: Take 001
+      firstFrame: 195
+      lastFrame: 205
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_gunRoot
+        weight: 0
+      - path: B_gunRoot/B_cylinderLock
+        weight: 0
+      - path: B_gunRoot/B_frontBody
+        weight: 0
+      - path: B_gunRoot/B_frontBody/B_cylinder
+        weight: 1
+      - path: B_gunRoot/B_hammer
+        weight: 0
+      - path: B_gunRoot/B_safty
+        weight: 0
+      - path: B_gunRoot/B_trigger
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 3b4bd0dc242b33c4f90dea4328d9343f,
+    type: 3}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

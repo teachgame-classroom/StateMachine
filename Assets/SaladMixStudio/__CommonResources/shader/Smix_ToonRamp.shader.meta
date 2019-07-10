@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: d6459194727f07d459cea90ebc41d969
+timeCreated: 1504337002
+licenseType: Store
+ShaderImporter:
+  defaultTextures:
+  - _ToonRamp: {fileID: 2800000, guid: 21e468148a9c121448010cdcde81e60a, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
