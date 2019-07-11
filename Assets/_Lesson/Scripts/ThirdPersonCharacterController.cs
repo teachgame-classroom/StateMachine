@@ -6,6 +6,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class ThirdPersonCharacterController : MonoBehaviour
 {
+    public bool isPlayer;
     protected CharacterStateMachine stateMachine;
     protected ThirdPersonCharacter character;
 
@@ -14,8 +15,11 @@ public class ThirdPersonCharacterController : MonoBehaviour
     {
         character = GetComponent<ThirdPersonCharacter>();
         stateMachine = new CharacterStateMachine(character);
-        InputManager.instance.InputEvent_Axis += OnInputAxis;
-        InputManager.instance.InputEvent_Button += OnInputButton;
+        if(isPlayer)
+        {
+            InputManager.instance.InputEvent_Axis += OnInputAxis;
+            InputManager.instance.InputEvent_Button += OnInputButton;
+        }
     }
 
     private void OnInputButton(string buttonName, ButtonEventType eventType)
@@ -31,7 +35,6 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
     void OnInputAxis(float h, float v)
     {
-        Debug.Log(string.Format("h:{0},v:{1}", h, v));
         stateMachine.OnInputAxis(h, v);
     }
 }

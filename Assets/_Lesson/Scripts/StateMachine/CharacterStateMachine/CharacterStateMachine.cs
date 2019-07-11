@@ -30,6 +30,16 @@ public class CharacterState : State
             Debug.LogError("Cannot find Rigidbody on character:" + owner.name);
         }
     }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if(!owner.isAlive)
+        {
+            stateMachine.SetState<CharacterState_Die>();
+        }
+    }
 }
 
 public class CharacterStateMachine : StateMachine

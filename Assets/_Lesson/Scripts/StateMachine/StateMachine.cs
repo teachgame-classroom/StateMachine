@@ -46,6 +46,8 @@ public class State
     public StateMachine stateMachine;
     public string stateName;
 
+    public bool canTransitToSelf;
+
     public State()
     {
 
@@ -59,17 +61,17 @@ public class State
 
     public virtual void Update()
     {
-        Debug.Log("正在运行状态：" + stateName);
+        //Debug.Log("正在运行状态：" + GetType());
     }
 
     public virtual void Enter()
     {
-        Debug.Log("进入状态：" + stateName);
+        Debug.Log("进入状态：" + GetType());
     }
 
     public virtual void Exit()
     {
-        Debug.Log("离开状态：" + stateName);
+        Debug.Log("离开状态：" + GetType());
     }
 
     public virtual void OnInputAxis(float h, float v)
@@ -190,6 +192,8 @@ public class StateMachine
         if(currentState != null)
         {
             State oldState = currentState;
+
+            if (oldState.GetType() == newState.GetType() && oldState.canTransitToSelf == false) return;
 
             oldState.Exit();
         }

@@ -71,7 +71,7 @@ public class InputManager : MonoBehaviour
 
     private void CheckInputKeyboard()
     {
-        Debug.Log("检查键盘事件");
+        //Debug.Log("检查键盘事件");
         int keyNumber = -1;
 
         if (Input.GetKeyDown(KeyCode.Alpha0))

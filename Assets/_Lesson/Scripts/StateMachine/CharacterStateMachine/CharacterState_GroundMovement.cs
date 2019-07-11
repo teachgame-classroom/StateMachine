@@ -47,7 +47,7 @@ public class CharacterState_GroundMovement : CharacterState
         Vector3 moveDirectionX = camTrans.right;
 
         moveDirection = moveDirectionX * movementInput.x + moveDirectionZ * movementInput.z;
-        Debug.Log("jump:" + jump);
+        //Debug.Log("jump:" + jump);
         Move(moveDirection);
 
         //jump = false;
@@ -170,6 +170,11 @@ public class CharacterState_GroundMovement : CharacterState
 
         if(eventType == ButtonEventType.Down)
         {
+            if (buttonName == InputList.FIRE1)
+            {
+                stateMachine.SetState<CharacterState_AxeAttack00>();
+            }
+
             if (buttonName == InputList.FIRE2)
             {
                 stateMachine.SetState<CharacterState_Jump>();
