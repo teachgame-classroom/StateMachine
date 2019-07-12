@@ -52,7 +52,7 @@ public class CharacterState_StepBack : CharacterState
 
         if(stepCurve > 0.9f)
         {
-            stateMachine.SetState<CharacterState_GroundMovement>();
+            stateMachine.SetState<CharacterState_GroundMovement_NoWeapon>();
         }
     }
 

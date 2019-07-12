@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterState_Crouch : CharacterState
+public class CharacterState_GroundMovement_Axe : CharacterState
 {
-    protected CapsuleCollider collider;
-    protected float originHeight;
-    protected Vector3 originCenter;
-
-    protected float crouchHeightFactor = 0.5f;
-
     protected Transform camTrans;
     protected Vector3 movementInput;
     protected Vector3 moveDirection;
@@ -34,28 +28,16 @@ public class CharacterState_Crouch : CharacterState
     Vector3 m_GroundNormal;
 
 
-
-    public CharacterState_Crouch(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
+    public CharacterState_GroundMovement_Axe(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
     {
         camTrans = Camera.main.transform;
-
-        collider = character.GetComponent<CapsuleCollider>();
-        originHeight = collider.height;
-        originCenter = collider.center;
     }
 
     public override void Enter()
     {
         base.Enter();
-
-        collider.height = originHeight * crouchHeightFactor;
-        collider.center = originCenter * crouchHeightFactor;
-
         anim.applyRootMotion = true;
-
-        anim.SetBool("Crouch", true);
-        anim.SetBool("OnGround", true);
-        anim.SetFloat("Jump", 0);
+        anim.SetInteger("WeaponMode", 1);
     }
 
     public override void Update()
@@ -66,7 +48,7 @@ public class CharacterState_Crouch : CharacterState
         Vector3 moveDirectionX = camTrans.right;
 
         moveDirection = moveDirectionX * movementInput.x + moveDirectionZ * movementInput.z;
-        Debug.Log("jump:" + jump);
+        //Debug.Log("jump:" + jump);
         Move(moveDirection);
 
         //jump = false;
@@ -140,6 +122,9 @@ public class CharacterState_Crouch : CharacterState
         // update the animator parameters
         anim.SetFloat("Forward", moveDirection.magnitude, 0.1f, Time.deltaTime);
         anim.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
+        anim.SetBool("Crouch", false);
+        anim.SetBool("OnGround", true);
+        anim.SetFloat("Jump", 0);
 
         float runCycle =
             Mathf.Repeat(
@@ -167,11 +152,6 @@ public class CharacterState_Crouch : CharacterState
     public override void Exit()
     {
         base.Exit();
-
-        collider.center = originCenter;
-        collider.height = originHeight;
-
-        anim.SetBool("Crouch", false);
     }
 
     public override void OnInputAxis(float h, float v)
@@ -191,9 +171,29 @@ public class CharacterState_Crouch : CharacterState
 
         if(eventType == ButtonEventType.Down)
         {
+            if (buttonName == InputList.R1)
+            {
+                stateMachine.SetState<CharacterState_GroundMovement_NoWeapon>();
+            }
+
+            if (buttonName == InputList.FIRE1)
+            {
+                stateMachine.SetState<CharacterState_AxeAttack00>();
+            }
+
+            if (buttonName == InputList.FIRE2)
+            {
+                stateMachine.SetState<CharacterState_Jump>();
+            }
+
             if (buttonName == InputList.FIRE3)
             {
-                stateMachine.SetState<CharacterState_GroundMovement_NoWeapon>(); // (stateMachine as CharacterStateMachine, "Move"));
+                stateMachine.SetState<CharacterState_Crouch>();
+            }
+
+            if (buttonName == InputList.FIRE4)
+            {
+                stateMachine.SetState<CharacterState_StepBack>();
             }
         }
     }

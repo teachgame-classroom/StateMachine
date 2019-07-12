@@ -47,7 +47,7 @@ public class CharacterState_Jump : CharacterState
 
         if(CheckGroundStatus())
         {
-            stateMachine.SetState<CharacterState_GroundMovement>(); // (stateMachine as CharacterStateMachine, "CharacterState_GroundMovement"));
+            stateMachine.SetState<CharacterState_GroundMovement_NoWeapon>(); // (stateMachine as CharacterStateMachine, "CharacterState_GroundMovement"));
         }
     }
 
@@ -55,7 +55,7 @@ public class CharacterState_Jump : CharacterState
     {
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(owner.transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+        if (Physics.Raycast(character.transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
         {
             return true;
             //anim.applyRootMotion = true;

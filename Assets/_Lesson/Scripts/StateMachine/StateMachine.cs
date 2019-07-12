@@ -88,6 +88,11 @@ public class State
     {
 
     }
+
+    public virtual void OnAnimationEvent(string eventName)
+    {
+        Debug.Log(GetType() + "状态接收到" + eventName + "动画事件");
+    }
 }
 
 public class StateMachine
@@ -221,4 +226,13 @@ public class StateMachine
             }
         }
     }
+
+    public virtual void OnAnimationEvent(string eventName)
+    {
+        if(currentState != null)
+        {
+            currentState.OnAnimationEvent(eventName);
+        }
+    }
+
 }

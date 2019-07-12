@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterState_GroundMovement : CharacterState
+public class CharacterState_GroundMovement_NoWeapon : CharacterState
 {
     protected Transform camTrans;
     protected Vector3 movementInput;
@@ -28,7 +28,7 @@ public class CharacterState_GroundMovement : CharacterState
     Vector3 m_GroundNormal;
 
 
-    public CharacterState_GroundMovement(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
+    public CharacterState_GroundMovement_NoWeapon(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
     {
         camTrans = Camera.main.transform;
     }
@@ -37,6 +37,7 @@ public class CharacterState_GroundMovement : CharacterState
     {
         base.Enter();
         anim.applyRootMotion = true;
+        anim.SetInteger("WeaponMode", 0);
     }
 
     public override void Update()
@@ -57,7 +58,7 @@ public class CharacterState_GroundMovement : CharacterState
     public void Move(Vector3 move)
     {
         if (move.magnitude > 1f) move.Normalize();
-        move = owner.transform.InverseTransformDirection(move);
+        move = character.transform.InverseTransformDirection(move);
         CheckGroundStatus();
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
         m_TurnAmount = Mathf.Atan2(move.x, move.z);
@@ -95,14 +96,14 @@ public class CharacterState_GroundMovement : CharacterState
     {
         // help the character turn faster (this is in addition to root rotation in the animation)
         float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, moveDirection.z);
-        owner.transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+        character.transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
     }
 
     void CheckGroundStatus()
     {
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(owner.transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+        if (Physics.Raycast(character.transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
         {
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
@@ -170,9 +171,9 @@ public class CharacterState_GroundMovement : CharacterState
 
         if(eventType == ButtonEventType.Down)
         {
-            if (buttonName == InputList.FIRE1)
+            if(buttonName == InputList.R1)
             {
-                stateMachine.SetState<CharacterState_AxeAttack00>();
+                stateMachine.SetState<CharacterState_GroundMovement_Axe>();
             }
 
             if (buttonName == InputList.FIRE2)

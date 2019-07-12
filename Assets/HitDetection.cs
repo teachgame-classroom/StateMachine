@@ -22,7 +22,7 @@ public class HitDetection : MonoBehaviour
 
         if(target && !transform.IsChildOf(target.transform))
         {
-            target.hp -= 10;
+            target.Hurt(10);
             Debug.Log("对" + target.gameObject.name + "造成了" + 10 + "点伤害,剩余生命" + target.hp);
         }
     }

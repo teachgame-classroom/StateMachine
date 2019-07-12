@@ -38,6 +38,10 @@ public class CharacterState_AttackBase : CharacterState
     {
         Debug.Log("AttackState:" + GetType());
         base.Enter();
+
+        controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
+        controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
+
         anim.applyRootMotion = true;
         anim.SetTrigger("Attack");
     }
@@ -50,14 +54,6 @@ public class CharacterState_AttackBase : CharacterState
     public override void UpdateAnimator()
     {
         float attackCurve = anim.GetFloat("AttackCurve");
-
-        Debug.Log(GetType() + "," + attackCurve);
-
-        if (attackCurve > 0.99f)
-        {
-            stateMachine.SetState<CharacterState_GroundMovement>();
-        }
-
         canReceiveComboInput = attackCurve > comboStartTime && attackCurve < comboEndTime;
     }
 
@@ -65,6 +61,8 @@ public class CharacterState_AttackBase : CharacterState
     public override void Exit()
     {
         base.Exit();
+        controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
+        controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
     }
 
     public override void OnInputButton(string buttonName, ButtonEventType eventType)
@@ -84,6 +82,49 @@ public class CharacterState_AttackBase : CharacterState
                     }
                 }
             }
+        }
+    }
+
+    public override void OnAnimationEvent(string eventName)
+    {
+        base.OnAnimationEvent(eventName);
+
+        if(eventName == "LeftCollider_On")
+        {
+            Debug.Log("打开左武器碰撞体");
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, true);
+        }
+        else if (eventName == "RightCollider_On")
+        {
+            Debug.Log("打开右武器碰撞体");
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, true);
+        }
+        else if (eventName == "LeftCollider_Off")
+        {
+            Debug.Log("关闭左武器碰撞体");
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
+        }
+        else if (eventName == "RightCollider_Off")
+        {
+            Debug.Log("关闭右武器碰撞体");
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
+        }
+        else if(eventName == "BothCollider_Off")
+        {
+            Debug.Log("关闭左右武器碰撞体");
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
+        }
+        else if (eventName == "BothCollider_On")
+        {
+            Debug.Log("打开左右武器碰撞体");
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, true);
+            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, true);
+        }
+        else if (eventName == "ComboEnd")
+        {
+            Debug.Log("结束连招");
+            stateMachine.SetState<CharacterState_GroundMovement_Axe>();
         }
     }
 }

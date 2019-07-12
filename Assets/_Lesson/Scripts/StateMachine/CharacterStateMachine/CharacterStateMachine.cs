@@ -5,7 +5,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class CharacterState : State
 {
-    protected ThirdPersonCharacter owner;
+    protected ThirdPersonCharacterController controller;
+    protected ThirdPersonCharacter character;
     protected Rigidbody body;
     protected Animator anim;
 
@@ -16,18 +17,20 @@ public class CharacterState : State
 
     public CharacterState(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
     {
-        owner = stateMachine.owner;
-        anim = owner.GetComponent<Animator>();
-        body = owner.GetComponent<Rigidbody>();
+        character = stateMachine.character;
+        controller = stateMachine.controller;
+
+        anim = character.GetComponent<Animator>();
+        body = character.GetComponent<Rigidbody>();
 
         if(!anim)
         {
-            Debug.LogError("Cannot find Animator on character:" + owner.name);
+            Debug.LogError("Cannot find Animator on character:" + character.name);
         }
 
         if (!body)
         {
-            Debug.LogError("Cannot find Rigidbody on character:" + owner.name);
+            Debug.LogError("Cannot find Rigidbody on character:" + character.name);
         }
     }
 
@@ -35,7 +38,7 @@ public class CharacterState : State
     {
         base.Update();
 
-        if(!owner.isAlive)
+        if(!character.isAlive)
         {
             stateMachine.SetState<CharacterState_Die>();
         }
@@ -44,17 +47,19 @@ public class CharacterState : State
 
 public class CharacterStateMachine : StateMachine
 {
-    public ThirdPersonCharacter owner;
+    public ThirdPersonCharacter character;
+    public ThirdPersonCharacterController controller;
 
-    public CharacterStateMachine(ThirdPersonCharacter owner)
+    public CharacterStateMachine(ThirdPersonCharacter character)
     {
-        this.owner = owner;
+        this.character = character;
+        this.controller = character.GetComponent<ThirdPersonCharacterController>();
         this.states = CreateAllStates<CharacterState>();
         for(int i = 0; i < states.Length; i++)
         {
             Debug.Log(states[i].GetType());
 
-            if(states[i].GetType() == typeof(CharacterState_GroundMovement))
+            if(states[i].GetType() == typeof(CharacterState_GroundMovement_NoWeapon))
             {
                 currentState = states[i];
             }

@@ -410,7 +410,42 @@ ModelImporter:
           preInfinity: 2
           postInfinity: 2
           rotationOrder: 4
-      events: []
+      events:
+      - time: 0.3184357
+        functionName: OnAnimationEvent
+        data: RightCollider_On
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.45530728
+        functionName: OnAnimationEvent
+        data: RightCollider_Off
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.737156
+        functionName: OnAnimationEvent
+        data: LeftCollider_On
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.86871505
+        functionName: OnAnimationEvent
+        data: LeftCollider_Off
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: OnAnimationEvent
+        data: ComboEnd
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -744,7 +779,7 @@ ModelImporter:
         weight: 1
       maskType: 1
       maskSource: {fileID: 101100000, guid: 3715a9a35a6357c4ba1319c8a35951e2, type: 2}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 27.9
     - serializedVersion: 16
       name: axe_attack_00_01end
       takeName: Take 001
