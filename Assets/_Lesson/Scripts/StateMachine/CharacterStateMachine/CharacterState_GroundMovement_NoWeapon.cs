@@ -176,6 +176,11 @@ public class CharacterState_GroundMovement_NoWeapon : CharacterState
                 stateMachine.SetState<CharacterState_GroundMovement_Axe>();
             }
 
+            if (buttonName == InputList.R2)
+            {
+                stateMachine.SetState<CharacterState_GroundMovement_Gun>();
+            }
+
             if (buttonName == InputList.FIRE2)
             {
                 stateMachine.SetState<CharacterState_Jump>();

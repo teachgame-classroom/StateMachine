@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SlotType { LeftWeapon, RightWeapon, LeftHand, RightHand, LeftBack, RightBack }
+public enum SlotType { LeftWeapon, RightWeapon, LeftHand, RightHand, LeftBack, RightBack, LeftShotPos, RightShotPos }
 
 public class SlotMarker : MonoBehaviour
 {

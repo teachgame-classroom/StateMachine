@@ -5,6 +5,8 @@ using System;
 
 public class CharacterState_AttackBase : CharacterState
 {
+    protected string attackButton;
+
     protected Type nextStateType;
     protected float comboStartTime;
     protected float comboEndTime;
@@ -18,13 +20,14 @@ public class CharacterState_AttackBase : CharacterState
         camTrans = Camera.main.transform;
     }
 
-    protected void Init(Type nextStateType, float comboStartTime, float comboEndTime)
+    protected void Init(Type nextStateType, float comboStartTime, float comboEndTime, string attackButton)
     {
         this.nextStateType = nextStateType;
         this.comboStartTime = comboStartTime;
         this.comboEndTime = comboEndTime;
+        this.attackButton = attackButton;
 
-        if(this.nextStateType != null)
+        if (this.nextStateType != null)
         {
             Debug.Log("NextState:" + this.nextStateType);
         }
@@ -38,9 +41,6 @@ public class CharacterState_AttackBase : CharacterState
     {
         Debug.Log("AttackState:" + GetType());
         base.Enter();
-
-        controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
-        controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
 
         anim.applyRootMotion = true;
         anim.SetTrigger("Attack");
@@ -61,21 +61,19 @@ public class CharacterState_AttackBase : CharacterState
     public override void Exit()
     {
         base.Exit();
-        controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
-        controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
     }
 
     public override void OnInputButton(string buttonName, ButtonEventType eventType)
     {
         base.OnInputButton(buttonName, eventType);
 
-        if (buttonName == InputList.FIRE1 && eventType == ButtonEventType.Down)
+        if (buttonName == attackButton && eventType == ButtonEventType.Down)
         {
             if (nextStateType != null && canReceiveComboInput)
             {
-                for(int i = 0; i < stateMachine.states.Length; i++)
+                for (int i = 0; i < stateMachine.states.Length; i++)
                 {
-                    if(nextStateType == stateMachine.states[i].GetType())
+                    if (nextStateType == stateMachine.states[i].GetType())
                     {
                         Debug.Log("Entering:" + stateMachine.states[i].GetType());
                         stateMachine.SetState(stateMachine.states[i]);
@@ -88,43 +86,11 @@ public class CharacterState_AttackBase : CharacterState
     public override void OnAnimationEvent(string eventName)
     {
         base.OnAnimationEvent(eventName);
+        OnAttackAnimationEvent(eventName);
+    }
 
-        if(eventName == "LeftCollider_On")
-        {
-            Debug.Log("打开左武器碰撞体");
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, true);
-        }
-        else if (eventName == "RightCollider_On")
-        {
-            Debug.Log("打开右武器碰撞体");
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, true);
-        }
-        else if (eventName == "LeftCollider_Off")
-        {
-            Debug.Log("关闭左武器碰撞体");
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
-        }
-        else if (eventName == "RightCollider_Off")
-        {
-            Debug.Log("关闭右武器碰撞体");
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
-        }
-        else if(eventName == "BothCollider_Off")
-        {
-            Debug.Log("关闭左右武器碰撞体");
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
-        }
-        else if (eventName == "BothCollider_On")
-        {
-            Debug.Log("打开左右武器碰撞体");
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, true);
-            controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, true);
-        }
-        else if (eventName == "ComboEnd")
-        {
-            Debug.Log("结束连招");
-            stateMachine.SetState<CharacterState_GroundMovement_Axe>();
-        }
+    protected virtual void OnAttackAnimationEvent(string eventName)
+    {
+
     }
 }
