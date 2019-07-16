@@ -188,7 +188,8 @@ public class CharacterState_GroundMovement_Gun : CharacterState
 
             if (buttonName == InputList.FIRE3)
             {
-                stateMachine.SetState<CharacterState_Crouch>();
+                controller.SwitchTarget();
+                //stateMachine.SetState<CharacterState_Crouch>();
             }
 
             if (buttonName == InputList.FIRE4)

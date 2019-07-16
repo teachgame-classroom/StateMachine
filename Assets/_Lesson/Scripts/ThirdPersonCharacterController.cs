@@ -13,6 +13,42 @@ public class ThirdPersonCharacterController : MonoBehaviour
     protected CharacterStateMachine stateMachine;
     protected ThirdPersonCharacter character;
 
+    public bool hasTarget { get { return targetIdx >= 0 && targetList[targetIdx] != null; } }
+
+
+    public ThirdPersonCharacter target
+    {
+        get
+        {
+            if (hasTarget)
+            {
+                return targetList[targetIdx];
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
+    protected List<ThirdPersonCharacter> targetList = new List<ThirdPersonCharacter>();
+    protected int targetIdx = -1;
+
+    public Vector3 targetDirection
+    {
+        get
+        {
+            if(hasTarget)
+            {
+                return (target.transform.position - transform.position).normalized;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+    }
+    
     protected Transform[] weapons = new Transform[2];
 
     protected Transform[] weaponLocation_L = new Transform[2];
@@ -72,6 +108,16 @@ public class ThirdPersonCharacterController : MonoBehaviour
         {
             InputManager.instance.InputEvent_Axis += OnInputAxis;
             InputManager.instance.InputEvent_Button += OnInputButton;
+
+            ThirdPersonCharacter[] characters = FindObjectsOfType<ThirdPersonCharacter>();
+
+            for(int i = 0; i < characters.Length; i++)
+            {
+                if(characters[i].gameObject.name != "Player")
+                {
+                    targetList.Add(characters[i]);
+                }
+            }
         }
     }
 
@@ -84,6 +130,13 @@ public class ThirdPersonCharacterController : MonoBehaviour
     void Update()
     {
         stateMachine.Update();
+
+        if(target)
+        {
+            UpdateCrossHair();
+        }
+
+        //SwitchTarget();
     }
 
     void OnInputAxis(float h, float v)
@@ -129,6 +182,57 @@ public class ThirdPersonCharacterController : MonoBehaviour
         }
     }
 
+    public bool IsAimAtTarget()
+    {
+        if(target)
+        {
+            float dot = Vector3.Dot(transform.forward, targetDirection);
+
+            if(dot > 0.999f)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void SwitchTarget()
+    {
+        int idx = NextIndex();
+
+        while (targetList[idx] == null || targetList[idx].isAlive == false)
+        {
+            idx = NextIndex();
+        }
+
+        targetIdx = idx;
+
+    }
+
+    private void UpdateCrossHair()
+    {
+        UIManager.instance.ShowCrosshair(target.transform.position + Vector3.up);
+    }
+
+    private int NextIndex()
+    {
+        int idx = targetIdx + 1;
+
+        if (idx >= targetList.Count)
+        {
+            idx = 0;
+        }
+
+        return idx;
+    }
+
     Vector3[] hitPos = new Vector3[2];
 
     public void Shoot(int weaponIdx)
@@ -141,8 +245,19 @@ public class ThirdPersonCharacterController : MonoBehaviour
         RaycastHit hit;
         Transform weaponTrans = weaponShotPos[weaponIdx];
         Vector3 endPoint = weaponTrans.position + transform.forward * 100;
+        Vector3 shotDirection = transform.forward;
 
-        if (Physics.Raycast(weaponTrans.position, transform.forward, out hit, 100))
+        if (IsAimAtTarget())
+        {
+            Vector3 aimPos = target.transform.position + Vector3.up;
+            Vector3 offset = Random.insideUnitSphere * 0.2f;
+
+            Vector3 finalAimPos = aimPos + offset;
+
+            shotDirection = (finalAimPos - weaponTrans.position).normalized;
+        }
+
+        if (Physics.Raycast(weaponTrans.position, shotDirection, out hit, 100))
         {
             ThirdPersonCharacter target = hit.transform.GetComponent<ThirdPersonCharacter>();
 
@@ -163,6 +278,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
         //Debug.DrawLine(weaponTrans.position, weaponTrans.position + transform.forward * 100);
 
         AudioSource.PlayClipAtPoint(fireClip, transform.position);
+    }
+
+    public void RotateTowardTarget()
+    {
+        if(target)
+        {
+            Quaternion targetRot = Quaternion.FromToRotation(Vector3.forward, targetDirection);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720 * Time.deltaTime);
+        }
     }
 
     IEnumerator GunTrail(int idx, Vector3 startPos, Vector3 endPos)

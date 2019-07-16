@@ -26,16 +26,6 @@ public class CharaacterState_GunAttack02 : CharacterState_RangeAttackBase
     {
         Init(typeof(CharaacterState_GunAttack03), 0.0f, 0.95f, InputList.FIRE1);
     }
-
-    public override void Update()
-    {
-        base.Update();
-        Debug.LogWarning("Attack02 Combo:" + canReceiveComboInput);
-
-        float attackCurve = anim.GetFloat("AttackCurve");
-
-        Debug.Log("Attack02 AttackCurve:" + attackCurve);
-    }
 }
 
 public class CharaacterState_GunAttack03 : CharacterState_RangeAttackBase
@@ -48,10 +38,64 @@ public class CharaacterState_GunAttack03 : CharacterState_RangeAttackBase
 
 public class CharacterState_RangeAttackBase : CharacterState_AttackBase
 {
+    protected bool isTriggerSet;
+
     public CharacterState_RangeAttackBase(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
     {
 
     }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        isTriggerSet = false;
+
+        if (!controller.hasTarget)
+        {
+            SetAttackTrigger();
+        }
+    }
+
+    private void SetAttackTrigger()
+    {
+        anim.SetTrigger("Attack");
+        isTriggerSet = true;
+    }
+
+    public override void Update()
+    {
+        Debug.Log("Range Update");
+
+        base.Update();
+
+        if(!isTriggerSet)
+        {
+            if (controller.hasTarget)
+            {
+                Debug.Log("HasTarget");
+                if (controller.IsAimAtTarget() == false)
+                {
+                    Debug.Log("Need Rotate");
+                    controller.RotateTowardTarget();
+                }
+                else
+                {
+                    SetAttackTrigger();
+                }
+            }
+        }
+
+        //Debug.LogWarning("Attack02 Combo:" + canReceiveComboInput);
+
+        float attackCurve = anim.GetFloat("AttackCurve");
+
+        //Debug.Log("Attack02 AttackCurve:" + attackCurve);
+
+        Debug.DrawLine(controller.transform.position, controller.transform.position + controller.transform.forward * 5, Color.red);
+        Debug.DrawLine(controller.transform.position, controller.targetDirection * 5, Color.green);
+    }
+
 
     protected override void OnAttackAnimationEvent(string eventName)
     {

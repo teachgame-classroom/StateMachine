@@ -43,7 +43,6 @@ public class CharacterState_AttackBase : CharacterState
         base.Enter();
 
         anim.applyRootMotion = true;
-        anim.SetTrigger("Attack");
     }
 
     public override void Update()

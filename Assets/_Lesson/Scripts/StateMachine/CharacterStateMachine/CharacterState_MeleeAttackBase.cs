@@ -13,6 +13,7 @@ public class CharacterState_MeleeAttackBase : CharacterState_AttackBase
     public override void Enter()
     {
         base.Enter();
+        anim.SetTrigger("Attack");
         controller.ToggleWeaponCollider(ThirdPersonCharacterController.RIGHT, false);
         controller.ToggleWeaponCollider(ThirdPersonCharacterController.LEFT, false);
     }
