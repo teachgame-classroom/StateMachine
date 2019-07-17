@@ -194,7 +194,7 @@ public class CharacterState_GroundMovement_Gun : CharacterState
 
             if (buttonName == InputList.FIRE4)
             {
-                stateMachine.SetState<CharacterState_StepBack>();
+                controller.CancelLockOn();
             }
         }
     }

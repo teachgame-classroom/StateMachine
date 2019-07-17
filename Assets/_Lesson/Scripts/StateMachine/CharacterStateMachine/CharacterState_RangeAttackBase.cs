@@ -51,10 +51,10 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
 
         isTriggerSet = false;
 
-        if (!controller.hasTarget)
-        {
-            SetAttackTrigger();
-        }
+        //if (!controller.hasTarget)
+        //{
+        //    SetAttackTrigger();
+        //}
     }
 
     private void SetAttackTrigger()
@@ -78,6 +78,19 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
                 {
                     Debug.Log("Need Rotate");
                     controller.RotateTowardTarget();
+                }
+                else
+                {
+                    SetAttackTrigger();
+                }
+            }
+            else
+            {
+                Debug.Log("NoTarget");
+                if (controller.IsAimAtTarget() == false)
+                {
+                    Debug.Log("Need Rotate");
+                    controller.RotateTowardAimDirection();
                 }
                 else
                 {

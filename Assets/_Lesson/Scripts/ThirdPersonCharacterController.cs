@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 
-public class ThirdPersonCharacterController : MonoBehaviour
+public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 {
     public const int LEFT = 0;
     public const int RIGHT = 1;
@@ -38,7 +38,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     {
         get
         {
-            if(hasTarget)
+            if (hasTarget)
             {
                 return (target.transform.position - transform.position).normalized;
             }
@@ -48,7 +48,13 @@ public class ThirdPersonCharacterController : MonoBehaviour
             }
         }
     }
-    
+
+    public CameraFollow cameraFollow
+    {
+        get;
+        set;
+    }
+
     protected Transform[] weapons = new Transform[2];
 
     protected Transform[] weaponLocation_L = new Transform[2];
@@ -69,11 +75,11 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
         SlotMarker[] slots = GetComponentsInChildren<SlotMarker>();
 
-        foreach(SlotMarker slot in slots)
+        foreach (SlotMarker slot in slots)
         {
             Transform slotTrans = slot.transform;
 
-            switch(slot.slotType)
+            switch (slot.slotType)
             {
                 case SlotType.LeftBack:
                     weaponLocation_L[0] = slotTrans;
@@ -111,9 +117,9 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
             ThirdPersonCharacter[] characters = FindObjectsOfType<ThirdPersonCharacter>();
 
-            for(int i = 0; i < characters.Length; i++)
+            for (int i = 0; i < characters.Length; i++)
             {
-                if(characters[i].gameObject.name != "Player")
+                if (characters[i].gameObject.name != "Player")
                 {
                     targetList.Add(characters[i]);
                 }
@@ -131,7 +137,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     {
         stateMachine.Update();
 
-        if(target)
+        if(isPlayer)
         {
             UpdateCrossHair();
         }
@@ -159,7 +165,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
         weapons[LEFT].SetParent(weaponLocation_L[weaponPosIdx]);
         weapons[RIGHT].SetParent(weaponLocation_R[weaponPosIdx]);
 
-        foreach(Transform trans in weapons)
+        foreach (Transform trans in weapons)
         {
             trans.localPosition = Vector3.zero;
             trans.localRotation = Quaternion.identity;
@@ -168,7 +174,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
     public void WpnPullTrigerRight(int idx)
     {
-        if(idx == 0)
+        if (idx == 0)
         {
             stateMachine.OnAnimationEvent("WpnPullTrigerRight");
         }
@@ -184,18 +190,25 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
     public bool IsAimAtTarget()
     {
-        if(target)
-        {
-            float dot = Vector3.Dot(transform.forward, targetDirection);
+        float dot = 0;
 
-            if(dot > 0.999f)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        if (target)
+        {
+            dot = Vector3.Dot(transform.forward, targetDirection);
+        }
+        else
+        {
+            Vector3 cameraDirectionXZ = cameraFollow.transform.forward;
+            cameraDirectionXZ.Set(cameraDirectionXZ.x, 0, cameraDirectionXZ.z);
+
+            cameraDirectionXZ.Normalize();
+
+            dot = Vector3.Dot(transform.forward, cameraDirectionXZ);
+        }
+
+        if (dot > 0.999f)
+        {
+            return true;
         }
         else
         {
@@ -214,11 +227,27 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
         targetIdx = idx;
 
+        cameraFollow.SetLockOnTarget(target.transform);
+    }
+
+    public void CancelLockOn()
+    {
+        targetIdx = -1;
+        cameraFollow.SetLockOnTarget(null);
     }
 
     private void UpdateCrossHair()
     {
-        UIManager.instance.ShowCrosshair(target.transform.position + Vector3.up);
+        if(target)
+        {
+            Debug.Log("Lock");
+            UIManager.instance.ShowCrosshair(target.transform.position + Vector3.up);
+        }
+        else
+        {
+            Debug.Log("Center");
+            UIManager.instance.CenterCrosshair();
+        }
     }
 
     private int NextIndex()
@@ -249,12 +278,27 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
         if (IsAimAtTarget())
         {
-            Vector3 aimPos = target.transform.position + Vector3.up;
-            Vector3 offset = Random.insideUnitSphere * 0.2f;
-
-            Vector3 finalAimPos = aimPos + offset;
-
-            shotDirection = (finalAimPos - weaponTrans.position).normalized;
+            if (target)
+            {
+                Vector3 aimPos = target.transform.position + Vector3.up;
+                Vector3 offset = Random.insideUnitSphere * 0.2f;
+                Vector3 finalAimPos = aimPos + offset;
+                shotDirection = (finalAimPos - weaponTrans.position).normalized;
+            }
+            else
+            {
+                if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit))
+                {
+                    Vector3 aimPos = hit.point;
+                    Debug.DrawLine(weaponTrans.position, aimPos, Color.yellow, 10f);
+                    shotDirection = (aimPos - weaponTrans.position).normalized;
+                }
+                else
+                {
+                    Vector3 aimPos = Camera.main.transform.position + Camera.main.transform.forward * 100;
+                    shotDirection = (aimPos - weaponTrans.position).normalized;
+                }
+            }
         }
 
         if (Physics.Raycast(weaponTrans.position, shotDirection, out hit, 100))
@@ -287,6 +331,17 @@ public class ThirdPersonCharacterController : MonoBehaviour
             Quaternion targetRot = Quaternion.FromToRotation(Vector3.forward, targetDirection);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720 * Time.deltaTime);
         }
+    }
+
+    public void RotateTowardAimDirection()
+    {
+        Vector3 aimDirection = cameraFollow.transform.forward;
+
+        aimDirection.Scale(new Vector3(1,0,1));
+        aimDirection.Normalize();
+
+        Quaternion targetRot = Quaternion.FromToRotation(Vector3.forward, aimDirection);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720 * Time.deltaTime);
     }
 
     IEnumerator GunTrail(int idx, Vector3 startPos, Vector3 endPos)

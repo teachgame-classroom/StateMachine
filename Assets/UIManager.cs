@@ -23,6 +23,12 @@ public class UIManager : MonoBehaviour
         ToggleCrosshair(true);
     }
 
+    public void CenterCrosshair()
+    {
+        crosshair.anchoredPosition = (Vector3.right * Screen.width + Vector3.up * Screen.height ) / 2 * screenRatio;
+        ToggleCrosshair(true);
+    }
+
     public void ToggleCrosshair(bool setActive)
     {
         crosshair.gameObject.SetActive(setActive);
