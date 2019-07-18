@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
+public enum MoveInputAxis { Horizontal, Vertical, Both, None }
+
 public class CharacterState : State
 {
     protected ThirdPersonCharacterController controller;
@@ -47,6 +49,8 @@ public class CharacterState : State
 
 public class CharacterStateMachine : StateMachine
 {
+    public MoveInputAxis moveInputAxis = MoveInputAxis.Both;
+
     public ThirdPersonCharacter character;
     public ThirdPersonCharacterController controller;
 
@@ -69,6 +73,22 @@ public class CharacterStateMachine : StateMachine
 
     public void OnInputAxis(float h, float v)
     {
+        switch (moveInputAxis)
+        {
+            case MoveInputAxis.Horizontal:
+                v = 0;
+                break;
+            case MoveInputAxis.Vertical:
+                h = 0;
+                break;
+            case MoveInputAxis.Both:
+                break;
+            case MoveInputAxis.None:
+                v = 0;
+                h = 0;
+                break;
+        }
+
         currentState.OnInputAxis(h, v);
     }
 

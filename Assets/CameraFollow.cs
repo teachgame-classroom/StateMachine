@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CameraState { Freelook, LookAt, LockOn }
+public enum CameraState { Freelook, LookAt, LockOn, ProfileLeft, ProfileRight, FixedAngle }
 
 public class CameraFollow : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class CameraFollow : MonoBehaviour
     public Transform lookAtTarget;
 
     public CameraState cameraState;
+    private CameraState cameraStateLastFrame;
 
     public float smooth = 5;
 
@@ -21,6 +22,14 @@ public class CameraFollow : MonoBehaviour
     private Transform pivot;
     private Transform camTrans;
     private Camera cam;
+
+    private Vector3 targetRigDirection;
+
+    private Vector3 additionalPivotOffset;
+
+    private Vector3 freelookPivotDirection;
+    private float freelookPivotDistance;
+    private float additionalFreelookPivotDistance;
 
     private float fov = 60;
     private float yaw_root;
@@ -46,51 +55,78 @@ public class CameraFollow : MonoBehaviour
             pivotPosTrans[id] = marker.transform;
         }
 
+        freelookPivotDirection = pivotPosTrans[(int)MarkerType.CameraPivotPos_Normal].localPosition;
+        freelookPivotDistance = freelookPivotDirection.magnitude;
+        freelookPivotDirection.Normalize();
+
         SetFollowTarget(followTarget);
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
+        if (cameraState != cameraStateLastFrame)
+        {
+            SetCameraState(cameraState);
+        }
+
+        if(Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            if(cameraState != CameraState.Freelook)
+            {
+                additionalPivotOffset += Vector3.forward * 0.5f;
+            }
+            else
+            {
+                additionalFreelookPivotDistance += 0.5f;
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            if (cameraState != CameraState.Freelook)
+            {
+                additionalPivotOffset -= Vector3.forward * 0.5f;
+            }
+            else
+            {
+                additionalFreelookPivotDistance -= 0.5f;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            additionalPivotOffset += Vector3.right * 0.5f;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            additionalPivotOffset -= Vector3.right * 0.5f;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            additionalPivotOffset = Vector3.zero;
+        }
+
         float smoothFactor = 1;
 
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            float newYaw = Mathf.Repeat(yaw + 30, 360);
-            SetYawAngle(newYaw);
-        }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            float newPitch = Mathf.Repeat(pitch + 30, 360);
-            SetPitchAngle(newPitch);
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            float newYaw = Mathf.Repeat(yaw - 30, 360);
-            SetYawAngle(newYaw);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            float newPitch = Mathf.Repeat(pitch - 30, 360);
-            SetPitchAngle(newPitch);
-        }
-
-        if(cameraState == CameraState.Freelook)
+        if (cameraState == CameraState.Freelook)
         {
             MoveCameraByMouse();
             camTrans.localRotation = Quaternion.Lerp(camTrans.localRotation, targetRotPitch, smooth * Time.deltaTime);
             pivot.localRotation = Quaternion.Lerp(pivot.localRotation, targetRotYaw, smooth * Time.deltaTime);
 
-            pivot.position = Vector3.Lerp(pivot.position, pivotPosTrans[(int)MarkerType.CameraPivotPos_Normal].position, 5 * Time.deltaTime);
+            Vector3 freelookPivotTargetPos = transform.position + transform.TransformDirection(freelookPivotDirection) * (freelookPivotDistance + additionalFreelookPivotDistance);
+
+            pivot.position = Vector3.Lerp(pivot.position, freelookPivotTargetPos, 5 * Time.deltaTime);
 
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotYaw_root, smooth * Time.deltaTime);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, smooth * Time.deltaTime);
 
         }
-        else if(cameraState == CameraState.LookAt)
+        else if (cameraState == CameraState.LookAt)
         {
             LookAt(lookAtTarget);
 
@@ -98,14 +134,49 @@ public class CameraFollow : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, smooth * Time.deltaTime);
             //camTrans.rotation = Quaternion.Lerp(camTrans.rotation, targetRotPitch, smooth * Time.deltaTime);
         }
-        else if(cameraState == CameraState.LockOn)
+        else if (cameraState == CameraState.LockOn)
         {
             LockOn(lookAtTarget);
             smoothFactor = 2;
         }
+        else if (cameraState == CameraState.ProfileRight || cameraState == CameraState.ProfileLeft || cameraState == CameraState.FixedAngle)
+        {
+            FixedAngle();
+        }
 
         transform.position = Vector3.Lerp(transform.position, followTarget.position, Mathf.Clamp01(smooth * smoothFactor * Time.deltaTime));
+        cameraStateLastFrame = cameraState;
+    }
 
+    public void SetCameraState(CameraState newState)
+    {
+        switch (newState)
+        {
+            case CameraState.Freelook:
+                break;
+            case CameraState.LookAt:
+                break;
+            case CameraState.LockOn:
+                break;
+            case CameraState.ProfileLeft:
+                targetRigDirection = followTarget.right;
+                break;
+            case CameraState.ProfileRight:
+                targetRigDirection = -followTarget.right;
+                break;
+            case CameraState.FixedAngle:
+                break;
+            default:
+                break;
+        }
+
+        cameraState = newState;
+    }
+
+    public void SetFixedAngle(Vector3 rigDirection)
+    {
+        targetRigDirection = rigDirection;
+        SetCameraState(CameraState.FixedAngle);
     }
 
     public void SetFollowTarget(Transform target)
@@ -142,7 +213,6 @@ public class CameraFollow : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        Debug.Log(mouseX + "," + mouseY);
         float deltaYaw = mouseX * mouseSensitivity_X;
         float deltaPitch = -mouseY * mouseSensitivity_Y;
 
@@ -193,6 +263,14 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
+    public void FixedAngle()
+    {
+        SetRigDirection(targetRigDirection);
+        SetPivotOffset(pivotPosTrans[(int)MarkerType.CameraPivotPos_FixedAngle].position);
+        SetCameraLookDirection(pivot.forward);
+    }
+
+
     public void SetCameraLookDirection(Vector3 direction)
     {
         direction.Normalize();
@@ -210,6 +288,7 @@ public class CameraFollow : MonoBehaviour
 
     public void SetPivotOffset(Vector3 offset)
     {
+        offset = offset + pivot.TransformDirection(additionalPivotOffset);
         pivot.position = Vector3.Lerp(pivot.position, offset, 5 * Time.deltaTime);
     }
 

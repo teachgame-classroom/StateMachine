@@ -65,18 +65,14 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
 
     public override void Update()
     {
-        Debug.Log("Range Update");
-
         base.Update();
 
         if(!isTriggerSet)
         {
             if (controller.hasTarget)
             {
-                Debug.Log("HasTarget");
                 if (controller.IsAimAtTarget() == false)
                 {
-                    Debug.Log("Need Rotate");
                     controller.RotateTowardTarget();
                 }
                 else
@@ -86,10 +82,8 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
             }
             else
             {
-                Debug.Log("NoTarget");
                 if (controller.IsAimAtTarget() == false)
                 {
-                    Debug.Log("Need Rotate");
                     controller.RotateTowardAimDirection();
                 }
                 else

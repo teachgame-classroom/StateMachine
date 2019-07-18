@@ -240,12 +240,10 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
     {
         if(target)
         {
-            Debug.Log("Lock");
             UIManager.instance.ShowCrosshair(target.transform.position + Vector3.up);
         }
         else
         {
-            Debug.Log("Center");
             UIManager.instance.CenterCrosshair();
         }
     }
@@ -303,7 +301,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
         if (Physics.Raycast(weaponTrans.position, shotDirection, out hit, 100))
         {
-            ThirdPersonCharacter target = hit.transform.GetComponent<ThirdPersonCharacter>();
+            ThirdPersonCharacterController target = hit.transform.GetComponent<ThirdPersonCharacterController>();
 
             hitPos[weaponIdx] = hit.point;
 
@@ -311,9 +309,9 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
             endPoint = hit.point;
 
-            if (target)
+            if (target && !target.isPlayer)
             {
-                target.Hurt(20);
+                target.character.Hurt(20);
             }
         }
 
@@ -342,6 +340,11 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
         Quaternion targetRot = Quaternion.FromToRotation(Vector3.forward, aimDirection);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720 * Time.deltaTime);
+    }
+
+    public void SetMoveInputAxis(MoveInputAxis moveInputAxis)
+    {
+        stateMachine.moveInputAxis = moveInputAxis;
     }
 
     IEnumerator GunTrail(int idx, Vector3 startPos, Vector3 endPos)
