@@ -6,8 +6,11 @@ public enum CameraState { Freelook, LookAt, LockOn, ProfileLeft, ProfileRight, F
 
 public class CameraFollow : MonoBehaviour
 {
+    public CameraParameters[] cameraParameters;
+    private int camParaIdx = 0;
+
     public Transform[] pivotPosTrans;
- 
+
     public Transform followTarget;
     public Transform lookAtTarget;
 
@@ -70,9 +73,9 @@ public class CameraFollow : MonoBehaviour
             SetCameraState(cameraState);
         }
 
-        if(Input.GetKeyDown(KeyCode.KeypadPlus))
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
         {
-            if(cameraState != CameraState.Freelook)
+            if (cameraState != CameraState.Freelook)
             {
                 additionalPivotOffset += Vector3.forward * 0.5f;
             }
@@ -110,41 +113,42 @@ public class CameraFollow : MonoBehaviour
             additionalPivotOffset = Vector3.zero;
         }
 
-        float smoothFactor = 1;
+        CameraParameters camPara = cameraParameters[camParaIdx];
 
-        if (cameraState == CameraState.Freelook)
+        if (camPara.mouseLook)
         {
             MoveCameraByMouse();
             camTrans.localRotation = Quaternion.Lerp(camTrans.localRotation, targetRotPitch, smooth * Time.deltaTime);
             pivot.localRotation = Quaternion.Lerp(pivot.localRotation, targetRotYaw, smooth * Time.deltaTime);
-
-            Vector3 freelookPivotTargetPos = transform.position + transform.TransformDirection(freelookPivotDirection) * (freelookPivotDistance + additionalFreelookPivotDistance);
-
-            pivot.position = Vector3.Lerp(pivot.position, freelookPivotTargetPos, 5 * Time.deltaTime);
-
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotYaw_root, smooth * Time.deltaTime);
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, smooth * Time.deltaTime);
-
         }
-        else if (cameraState == CameraState.LookAt)
+
+        if (camPara.lookAt)
         {
             LookAt(lookAtTarget);
 
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotYaw_root, smooth * Time.deltaTime);
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, smooth * Time.deltaTime);
-            //camTrans.rotation = Quaternion.Lerp(camTrans.rotation, targetRotPitch, smooth * Time.deltaTime);
-        }
-        else if (cameraState == CameraState.LockOn)
-        {
-            LockOn(lookAtTarget);
-            smoothFactor = 2;
-        }
-        else if (cameraState == CameraState.ProfileRight || cameraState == CameraState.ProfileLeft || cameraState == CameraState.FixedAngle)
-        {
-            FixedAngle();
+            if (camPara.rotateRigTowardsTarget)
+            {
+                Vector3 direction = lookAtTarget.position - followTarget.position;
+                SetRigDirection(direction);
+            }
         }
 
-        transform.position = Vector3.Lerp(transform.position, followTarget.position, Mathf.Clamp01(smooth * smoothFactor * Time.deltaTime));
+        if (camPara.fixedRigDirection != Vector3.zero)
+        {
+            SetRigDirection(camPara.localSpaceRigDirection ? followTarget.TransformDirection(camPara.fixedRigDirection) : camPara.fixedRigDirection);
+        }
+
+        if (camPara.fixedLookDirection != Vector3.zero)
+        {
+            SetCameraLookDirection(camPara.localSpaceLookDirection ? followTarget.TransformDirection(camPara.fixedLookDirection) : camPara.fixedLookDirection);
+        }
+
+        Vector3 pivotTargetPos = transform.TransformPoint(camPara.pivotOffset);
+        pivot.position = Vector3.Lerp(pivot.position, pivotTargetPos, 5 * Time.deltaTime);
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, camPara.fov, smooth * Time.deltaTime);
+
+        transform.position = Vector3.Lerp(transform.position, followTarget.position, Mathf.Clamp01(smooth * camPara.smooth * Time.deltaTime));
         cameraStateLastFrame = cameraState;
     }
 
@@ -153,18 +157,24 @@ public class CameraFollow : MonoBehaviour
         switch (newState)
         {
             case CameraState.Freelook:
+                camParaIdx = 0;
                 break;
             case CameraState.LookAt:
+                camParaIdx = 1;
                 break;
             case CameraState.LockOn:
+                camParaIdx = 2;
                 break;
             case CameraState.ProfileLeft:
-                targetRigDirection = followTarget.right;
+                camParaIdx = 3;
+                //targetRigDirection = followTarget.right;
                 break;
             case CameraState.ProfileRight:
-                targetRigDirection = -followTarget.right;
+                camParaIdx = 4;
+                //targetRigDirection = -followTarget.right;
                 break;
             case CameraState.FixedAngle:
+                camParaIdx = 5;
                 break;
             default:
                 break;
@@ -175,7 +185,10 @@ public class CameraFollow : MonoBehaviour
 
     public void SetFixedAngle(Vector3 rigDirection)
     {
-        targetRigDirection = rigDirection;
+        cameraParameters[5].localSpaceRigDirection = false;
+        cameraParameters[5].fixedRigDirection = rigDirection;
+        cameraParameters[5].localSpaceLookDirection = false;
+        cameraParameters[5].fixedLookDirection = rigDirection;
         SetCameraState(CameraState.FixedAngle);
     }
 
@@ -189,7 +202,7 @@ public class CameraFollow : MonoBehaviour
 
         ICameraFollowable followable = followTarget.GetComponent<ICameraFollowable>();
 
-        if(followable != null)
+        if (followable != null)
         {
             followable.cameraFollow = this;
         }
@@ -197,7 +210,7 @@ public class CameraFollow : MonoBehaviour
 
     public void SetLockOnTarget(Transform target)
     {
-        if(target != null)
+        if (target != null)
         {
             lookAtTarget = target;
             cameraState = CameraState.LockOn;
@@ -218,8 +231,6 @@ public class CameraFollow : MonoBehaviour
 
         SetRootYawAngle(yaw_root + deltaYaw);
         SetPitchAngle(pitch + deltaPitch);
-
-        fov = 60;
     }
 
     public void StartLookAt(float duration = 2)
@@ -232,26 +243,41 @@ public class CameraFollow : MonoBehaviour
 
     public void LookAt(Transform target)
     {
-        Vector3 lookDirection = target.position - camTrans.position;
-        Vector3 lookDirection_Yaw = Vector3.Scale(new Vector3(1, 0, 1), lookDirection);
-        Vector3 lookDirection_Pitch = Vector3.Scale(new Vector3(0, 1, 1), lookDirection);
+        if (target != null)
+        {
+            ObjectMarker[] markers = target.GetComponentsInChildren<ObjectMarker>();
+            Vector3 lookAtPos = target.position;
 
-        Quaternion lookRotationYaw = Quaternion.LookRotation(lookDirection_Yaw);
-        Quaternion lookRotationPitch = Quaternion.LookRotation(lookDirection_Pitch);
+            for (int i = 0; i < markers.Length; i++)
+            {
+                if (markers[i].slotType == MarkerType.LookAtPos)
+                {
+                    lookAtPos = markers[i].transform.position;
+                }
+            }
 
-        Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
+            Vector3 lookDirection = lookAtPos - camTrans.position;
+            SetCameraLookDirection(lookDirection);
+        }
 
-        targetRotYaw_root = lookRotationYaw;
-        targetRotPitch = lookRotation;
+        //Vector3 lookDirection = target.position - camTrans.position;
+        //Vector3 lookDirection_Yaw = Vector3.Scale(new Vector3(1, 0, 1), lookDirection);
+        //Vector3 lookDirection_Pitch = Vector3.Scale(new Vector3(0, 1, 1), lookDirection);
 
-        SetYawAngle(0);
+        //Quaternion lookRotationYaw = Quaternion.LookRotation(lookDirection_Yaw);
+        //Quaternion lookRotationPitch = Quaternion.LookRotation(lookDirection_Pitch);
 
-        fov = 30;
+        //Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
+
+        //targetRotYaw_root = lookRotationYaw;
+        //targetRotPitch = lookRotation;
+
+        //SetYawAngle(0);
     }
 
     public void LockOn(Transform target)
     {
-        if(target != null)
+        if (target != null)
         {
             Vector3 direction = target.position - followTarget.position;
             SetRigDirection(direction);
@@ -274,7 +300,7 @@ public class CameraFollow : MonoBehaviour
     public void SetCameraLookDirection(Vector3 direction)
     {
         direction.Normalize();
-        Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
         camTrans.rotation = lookRotation;
     }
 
