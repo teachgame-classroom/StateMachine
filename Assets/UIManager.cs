@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
@@ -19,6 +23,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        GameObject player = GameObject.Find("Player");
+        player.GetComponent<ThirdPersonCharacterController>().inventory.InventoryChangeEvent += OnInventoryChange;
+
         instance = this;
         TogglePanel(characterPanel, false);
 
@@ -44,12 +51,14 @@ public class UIManager : MonoBehaviour
         SetItemHover(-1);
     }
 
+    private void OnInventoryChange(int gridIdx, int itemCount, Sprite sprite)
+    {
+        SetItemSlotSprite(gridIdx, sprite);
+        SetItemSlotCountText(gridIdx, itemCount);
+    }
+
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            TogglePanel(characterPanel, !characterPanel.gameObject.activeSelf);
-        }
     }
 
     public void ShowCrosshair(Vector3 worldPos)
@@ -75,12 +84,41 @@ public class UIManager : MonoBehaviour
         panel.gameObject.SetActive(setActive);
     }
 
+    public bool ToggleCharacterPanel()
+    {
+        TogglePanel(characterPanel, !characterPanel.gameObject.activeSelf);
+        return characterPanel.gameObject.activeSelf;
+    }
+
     public void SetItemSlotSprite(int idx, Sprite sprite)
     {
         Image iconImage = itemSlots[idx].Find("Icon").GetComponent<Image>();
         iconImage.sprite = sprite;
-        iconImage.gameObject.SetActive(true);
+
+        if(iconImage.sprite)
+        {
+            iconImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            iconImage.gameObject.SetActive(false);
+        }
     }
+
+    public void SetItemSlotCountText(int idx, int number)
+    {
+        Text text = itemSlots[idx].Find("Number").GetComponent<Text>();
+
+        if (number > 0)
+        {
+            text.text = number.ToString();
+        }
+        else
+        {
+            text.text = "";
+        }
+    }
+
 
     public void SetItemHover(int idx)
     {
@@ -100,6 +138,20 @@ public class UIManager : MonoBehaviour
 
             hoverSlotIdx = idx;
             itemSlots[hoverSlotIdx].Find("Hover").gameObject.SetActive(true);
+        }
+    }
+
+    [MenuItem("Tools/Rename Selected...")]
+    public static void RenameSelectedObject()
+    {
+        GameObject selected = Selection.activeGameObject;
+
+        Text[] texts = selected.transform.GetComponentsInChildren<Text>();
+
+        for(int i = 0; i < texts.Length; i++)
+        {
+            texts[i].gameObject.name = "Number";
+            texts[i].text = "";
         }
     }
 }

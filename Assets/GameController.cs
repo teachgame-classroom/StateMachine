@@ -24,7 +24,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            playerController.inventory.Refresh();
+            UIManager.instance.ToggleCharacterPanel();
+        }
     }
 
     public void OnMapEvent(string eventName, params object[] para)

@@ -66,6 +66,11 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
     public LineRenderer[] gunTrailEffects;
 
+    public const int BACKPACK_SIZE = 10;
+    public Inventory inventory = new Inventory(BACKPACK_SIZE);
+
+    public Item[] testItems = new Item[8];
+    private int testItemIdx = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -124,6 +129,15 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
                     targetList.Add(characters[i]);
                 }
             }
+
+            testItems[0] = (new Item(1, "GunAxe"));
+            testItems[1] = (new Item(2, "Gun"));
+            testItems[2] = (new Item(3, "Arrow"));
+            testItems[3] = (new Item(4, "Axe"));
+            testItems[4] = (new Item(5, "Book"));
+            testItems[5] = (new Item(6, "Shield"));
+            testItems[6] = (new Item(7, "MagicSword"));
+            testItems[7] = (new Item(8, "Sword"));
         }
     }
 
@@ -140,9 +154,24 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
         if(isPlayer)
         {
             UpdateCrossHair();
+
+            if(Input.GetKeyDown(KeyCode.T))
+            {
+                TestPutInItem(testItemIdx);
+                testItemIdx++;
+                if(testItemIdx >= testItems.Length)
+                {
+                    testItemIdx = 0;
+                }
+            }
         }
 
         //SwitchTarget();
+    }
+
+    void TestPutInItem(int idx)
+    {
+        inventory.PutInItem(testItems[idx]);
     }
 
     void OnInputAxis(float h, float v)
@@ -371,6 +400,20 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
         }
 
         gunTrailEffects[idx].gameObject.SetActive(false);
+    }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if(isPlayer)
+        {
+            Pickup pickup = collider.GetComponent<Pickup>();
+
+            if (pickup)
+            {
+                inventory.PutInItem(pickup.itemId, pickup.itemCount);
+                Destroy(collider.gameObject);
+            }
+        }
     }
 
     void OnDrawGizmos()
