@@ -19,14 +19,21 @@ public class UIManager : MonoBehaviour
 
     private int hoverSlotIdx = -1;
 
+    public delegate void InventorySlotDelegate(int slotIdx);
+    public event InventorySlotDelegate InventorySlotClickEvent;
+
     float screenRatio { get { return (float)1280 / Screen.width; } }
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
         GameObject player = GameObject.Find("Player");
         player.GetComponent<ThirdPersonCharacterController>().inventory.InventoryChangeEvent += OnInventoryChange;
 
-        instance = this;
         TogglePanel(characterPanel, false);
 
         inventoryPanel = characterPanel.Find("Content/Extension (Bags)") as RectTransform;
@@ -53,7 +60,15 @@ public class UIManager : MonoBehaviour
 
     private void OnInventoryChange(int gridIdx, int itemCount, Sprite sprite)
     {
-        SetItemSlotSprite(gridIdx, sprite);
+        if(itemCount > 0)
+        {
+            SetItemSlotSprite(gridIdx, sprite);
+        }
+        else
+        {
+            SetItemSlotSprite(gridIdx, null);
+        }
+
         SetItemSlotCountText(gridIdx, itemCount);
     }
 
@@ -138,6 +153,15 @@ public class UIManager : MonoBehaviour
 
             hoverSlotIdx = idx;
             itemSlots[hoverSlotIdx].Find("Hover").gameObject.SetActive(true);
+        }
+    }
+
+    public void OnSlotClicked(int slotIdx)
+    {
+        Debug.Log("点击了" + slotIdx + "号格子");
+        if(InventorySlotClickEvent != null)
+        {
+            InventorySlotClickEvent(slotIdx);
         }
     }
 

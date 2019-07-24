@@ -6,6 +6,8 @@ public enum CameraState { Freelook, LookAt, LockOn, ProfileLeft, ProfileRight, F
 
 public class CameraFollow : MonoBehaviour
 {
+    public bool freezeCamera;
+
     public CameraParameters[] cameraParameters;
     private int camParaIdx = 0;
 
@@ -115,7 +117,7 @@ public class CameraFollow : MonoBehaviour
 
         CameraParameters camPara = cameraParameters[camParaIdx];
 
-        if (camPara.mouseLook)
+        if (camPara.mouseLook && !freezeCamera)
         {
             MoveCameraByMouse();
             camTrans.localRotation = Quaternion.Lerp(camTrans.localRotation, targetRotPitch, smooth * Time.deltaTime);

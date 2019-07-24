@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SlotHoverDetection : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class SlotHoverDetection : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public int slotIdx;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        UIManager.instance.OnSlotClicked(slotIdx);
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {

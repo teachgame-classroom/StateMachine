@@ -10,10 +10,17 @@ public class InventoryGrid
 
 public class Inventory
 {
+    public IItemOwner owner;
+
     public delegate void InventoryChangeDelegate(int gridIdx, int itemCount, Sprite sprite);
     public event InventoryChangeDelegate InventoryChangeEvent;
 
     private InventoryGrid[] grids;
+
+    public Inventory(int capacity, IItemOwner owner) : this(capacity)
+    {
+        this.owner = owner;
+    }
 
     public Inventory(int capacity)
     {
@@ -42,9 +49,18 @@ public class Inventory
 
     public bool PutInItem(int itemId, int itemCount = 1)
     {
-        Item item = ItemFactory.CreateItem(itemId);
-
-        return PutInItem(item, itemCount);
+        if(itemId <= 3)
+        {
+            Item item = ItemFactory.CreateWeapon(itemId);
+            item.owner = this.owner;
+            return PutInItem(item, itemCount);
+        }
+        else
+        {
+            Item item = ItemFactory.CreateItem(itemId);
+            item.owner = this.owner;
+            return PutInItem(item, itemCount);
+        }
     }
 
     public bool PutInItem(Item item, int itemCount = 1)
@@ -85,7 +101,9 @@ public class Inventory
 
         if(result)
         {
-            if(InventoryChangeEvent != null)
+            grids[putInGridIdx].item.grid = grids[putInGridIdx];
+
+            if (InventoryChangeEvent != null)
             {
                 InventoryChangeEvent(putInGridIdx, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite);
             }
@@ -96,5 +114,30 @@ public class Inventory
         }
 
         return result;
+    }
+
+    public void OnInventorySlotClick(int slotIdx)
+    {
+        Debug.Log("背包收到了" + slotIdx + "号格子的点击事件");
+        if(HasItem(slotIdx))
+        {
+            grids[slotIdx].item.OnClick();
+            Debug.Log(grids[slotIdx].itemCount);
+        }
+
+        int itemCount = grids[slotIdx].itemCount;
+        Sprite sprite = null;
+
+        if (grids[slotIdx].item != null)
+        {
+            sprite = grids[slotIdx].item.sprite;
+        }
+
+        InventoryChangeEvent(slotIdx, itemCount, sprite);
+    }
+
+    public bool HasItem(int slotIdx)
+    {
+        return grids[slotIdx].itemCount > 0 && grids[slotIdx].item != null;
     }
 }

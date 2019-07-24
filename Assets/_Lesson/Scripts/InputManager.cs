@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour
         if (keyNumber >= 0 && keyNumber <= 9)
         {
             Debug.Log("发送键盘事件");
-            InputEvent_Keyboard(keyNumber);
+            if(InputEvent_Keyboard != null) InputEvent_Keyboard(keyNumber);
         }
     }
 

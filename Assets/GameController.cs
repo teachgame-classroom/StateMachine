@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
         {
             playerController.inventory.Refresh();
             UIManager.instance.ToggleCharacterPanel();
+            cameraFollow.freezeCamera = !cameraFollow.freezeCamera;
         }
     }
 

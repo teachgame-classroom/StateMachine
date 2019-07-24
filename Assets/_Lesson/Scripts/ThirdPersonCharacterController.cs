@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 
-public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
+public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, IItemOwner
 {
     public const int LEFT = 0;
     public const int RIGHT = 1;
@@ -55,7 +55,9 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
         set;
     }
 
-    protected Transform[] weapons = new Transform[2];
+    protected Transform[] currentWeapons = new Transform[2];
+
+    protected Transform[] weapons = new Transform[6];
 
     protected Transform[] weaponLocation_L = new Transform[2];
     protected Transform[] weaponLocation_R = new Transform[2];
@@ -66,19 +68,21 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
     public LineRenderer[] gunTrailEffects;
 
-    public const int BACKPACK_SIZE = 10;
-    public Inventory inventory = new Inventory(BACKPACK_SIZE);
+    public const int BACKPACK_SIZE = 40;
+    public Inventory inventory;
 
     public Item[] testItems = new Item[8];
     private int testItemIdx = 0;
     // Start is called before the first frame update
     void Start()
     {
+        inventory = new Inventory(BACKPACK_SIZE, this);
+
         character = GetComponent<ThirdPersonCharacter>();
         stateMachine = new CharacterStateMachine(character);
 
 
-        SlotMarker[] slots = GetComponentsInChildren<SlotMarker>();
+        SlotMarker[] slots = GetComponentsInChildren<SlotMarker>(true);
 
         foreach (SlotMarker slot in slots)
         {
@@ -98,11 +102,23 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
                 case SlotType.RightHand:
                     weaponLocation_R[1] = slotTrans;
                     break;
-                case SlotType.LeftWeapon:
-                    weapons[LEFT] = slotTrans;
+                case SlotType.LeftGunAxe:
+                    weapons[(int)WeaponType.GunAxe * 2] = slotTrans;
                     break;
-                case SlotType.RightWeapon:
-                    weapons[RIGHT] = slotTrans;
+                case SlotType.RightGunAxe:
+                    weapons[(int)WeaponType.GunAxe * 2 + 1] = slotTrans;
+                    break;
+                case SlotType.LeftAxe:
+                    weapons[(int)WeaponType.Axe * 2] = slotTrans;
+                    break;
+                case SlotType.RightAxe:
+                    weapons[(int)WeaponType.Axe * 2 + 1] = slotTrans;
+                    break;
+                case SlotType.LeftGun:
+                    weapons[(int)WeaponType.Gun * 2] = slotTrans;
+                    break;
+                case SlotType.RightGun:
+                    weapons[(int)WeaponType.Gun * 2 + 1] = slotTrans;
                     break;
                 case SlotType.LeftShotPos:
                     weaponShotPos[LEFT] = slotTrans;
@@ -130,14 +146,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
                 }
             }
 
-            testItems[0] = (new Item(1, "GunAxe"));
-            testItems[1] = (new Item(2, "Gun"));
-            testItems[2] = (new Item(3, "Arrow"));
-            testItems[3] = (new Item(4, "Axe"));
-            testItems[4] = (new Item(5, "Book"));
-            testItems[5] = (new Item(6, "Shield"));
-            testItems[6] = (new Item(7, "MagicSword"));
-            testItems[7] = (new Item(8, "Sword"));
+            UIManager.instance.InventorySlotClickEvent += inventory.OnInventorySlotClick;
         }
     }
 
@@ -164,6 +173,19 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
                     testItemIdx = 0;
                 }
             }
+
+            if(Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                EquipWeapon(WeaponType.GunAxe);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                EquipWeapon(WeaponType.Axe);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                EquipWeapon(WeaponType.Gun);
+            }
         }
 
         //SwitchTarget();
@@ -181,7 +203,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
     public void ToggleWeaponCollider(int weaponIdx, bool setActive)
     {
-        weapons[weaponIdx].GetComponent<Collider>().enabled = setActive;
+        currentWeapons[weaponIdx].GetComponent<Collider>().enabled = setActive;
     }
 
     public void OnAnimationEvent(string eventName)
@@ -191,10 +213,10 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
 
     public void AttachWeapon(int weaponPosIdx)
     {
-        weapons[LEFT].SetParent(weaponLocation_L[weaponPosIdx]);
-        weapons[RIGHT].SetParent(weaponLocation_R[weaponPosIdx]);
+        currentWeapons[LEFT].SetParent(weaponLocation_L[weaponPosIdx]);
+        currentWeapons[RIGHT].SetParent(weaponLocation_R[weaponPosIdx]);
 
-        foreach (Transform trans in weapons)
+        foreach (Transform trans in currentWeapons)
         {
             trans.localPosition = Vector3.zero;
             trans.localRotation = Quaternion.identity;
@@ -400,6 +422,36 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable
         }
 
         gunTrailEffects[idx].gameObject.SetActive(false);
+    }
+
+    public bool UseItem(Item item)
+    {
+        return true;
+    }
+
+    public bool Equip(Equipment equipment)
+    {
+        Weapon weapon = equipment as Weapon;
+
+        if(weapon != null)
+        {
+            EquipWeapon(weapon.weaponType);
+        }
+
+        return true;
+    }
+
+    public void EquipWeapon(WeaponType weaponType)
+    {
+        if (currentWeapons[0]) currentWeapons[0].gameObject.SetActive(false);
+        if (currentWeapons[1]) currentWeapons[1].gameObject.SetActive(false);
+
+        int weaponStartIdx = (int)weaponType * 2;
+        currentWeapons[0] = weapons[weaponStartIdx];
+        currentWeapons[1] = weapons[weaponStartIdx + 1];
+
+        currentWeapons[0].gameObject.SetActive(true);
+        currentWeapons[1].gameObject.SetActive(true);
     }
 
     void OnTriggerEnter(Collider collider)
