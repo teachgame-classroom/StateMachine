@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: a7bed68887a07e34394d4191b3081359, type: 3}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.24939394, g: 0.31173864, b: 0.36743417, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -226,6 +226,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  baseSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 1000
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  finalSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 0
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  hurtEffect: {fileID: 100010, guid: b20a1118195b0be41890ff2dd4fc12b1, type: 3}
   fireClip: {fileID: 0}
   gunTrailEffects: []
 --- !u!4 &13347296 stripped
@@ -300,6 +321,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
+--- !u!1 &66262004 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 129084, guid: bcf0273c5d33f0540abbf5ae3f0293f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 2137437287}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &66262006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66262004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b6449de0094a524d960a3c085d28192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotType: 7
 --- !u!1 &70672141
 GameObject:
   m_ObjectHideFlags: 0
@@ -2276,6 +2316,18 @@ PrefabInstance:
       propertyPath: gunTrailEffects.Array.data[1]
       value: 
       objectReference: {fileID: 1732458477}
+    - target: {fileID: 838325352, guid: 6f4043bfbb847c34ba30c5e9594033a9, type: 3}
+      propertyPath: spec.hp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 838325352, guid: 6f4043bfbb847c34ba30c5e9594033a9, type: 3}
+      propertyPath: baseSpec.hp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 838325352, guid: 6f4043bfbb847c34ba30c5e9594033a9, type: 3}
+      propertyPath: baseSpec.atk
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 838325357, guid: 6f4043bfbb847c34ba30c5e9594033a9, type: 3}
       propertyPath: m_Constraints
       value: 0
@@ -2371,6 +2423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54aca7d0fcbb8f64d8af513dcef36e44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  freezeCamera: 0
   cameraParameters:
   - {fileID: 11400000, guid: 0993925564e972548b8b231c8efbbe1f, type: 2}
   - {fileID: 11400000, guid: cf488ab67b129f242aee30e334b32135, type: 2}
@@ -3890,6 +3943,7 @@ GameObject:
   - component: {fileID: 1063350811}
   - component: {fileID: 1063350813}
   - component: {fileID: 1063350814}
+  - component: {fileID: 1063350815}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3949,6 +4003,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 309b7504aa8c82a4db3997cb4bd42e08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1063350815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063350810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8ae0268b1d9e44e9c9172ba6b8987c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 11400000, guid: c6cfe042fe43af040bc68aa116e2bd45, type: 2}
 --- !u!1 &1104479599 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 167622, guid: bcf0273c5d33f0540abbf5ae3f0293f3,
@@ -4354,6 +4421,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 2
+--- !u!1 &1204977937 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 129084, guid: bcf0273c5d33f0540abbf5ae3f0293f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 806921046}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1204977939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204977937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b6449de0094a524d960a3c085d28192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotType: 6
 --- !u!1 &1228741354
 GameObject:
   m_ObjectHideFlags: 0
@@ -4637,7 +4723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427ae47751f31324c8f9f837cb2505f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemId: 3
+  itemId: 2
   itemCount: 2
 --- !u!135 &1264230693
 SphereCollider:
@@ -5894,6 +5980,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  baseSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 1000
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  finalSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 0
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  hurtEffect: {fileID: 100010, guid: b20a1118195b0be41890ff2dd4fc12b1, type: 3}
   fireClip: {fileID: 0}
   gunTrailEffects: []
 --- !u!1001 &1600192639
@@ -7898,6 +8005,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  baseSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 1000
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  finalSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 0
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  hurtEffect: {fileID: 100010, guid: b20a1118195b0be41890ff2dd4fc12b1, type: 3}
   fireClip: {fileID: 0}
   gunTrailEffects: []
 --- !u!1 &1644010012 stripped
@@ -8803,6 +8931,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  baseSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 1000
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  finalSpec:
+    atk: 0
+    def: 0
+    dex: 0
+    hp: 0
+    mana: 0
+    fury: 0
+    recoverHp: 0
+    recoverMana: 0
+    recoverFury: 0
+  hurtEffect: {fileID: 100010, guid: b20a1118195b0be41890ff2dd4fc12b1, type: 3}
   fireClip: {fileID: 0}
   gunTrailEffects: []
 --- !u!1 &1783215626
@@ -10394,7 +10543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427ae47751f31324c8f9f837cb2505f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemId: 2
+  itemId: 3
   itemCount: 3
 --- !u!135 &2132956788
 SphereCollider:

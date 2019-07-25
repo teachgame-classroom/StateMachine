@@ -6,11 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class ThirdPersonCharacter : MonoBehaviour
 {
-    public int hp = 100;
-    public GameObject hurtEffect;
-
-    public bool isAlive { get { return hp > 0; } }
-
     [SerializeField] float m_MovingTurnSpeed = 360;
     [SerializeField] float m_StationaryTurnSpeed = 180;
     [SerializeField] float m_JumpPower = 12f;
@@ -207,16 +202,6 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_IsGrounded = false;
             m_GroundNormal = Vector3.up;
             m_Animator.applyRootMotion = false;
-        }
-    }
-
-    public void Hurt(int damage)
-    {
-        if(isAlive)
-        {
-            hp -= damage;
-            GameObject effect = Instantiate(hurtEffect, transform.position + Vector3.up, transform.rotation);
-            Destroy(effect, 2f);
         }
     }
 }

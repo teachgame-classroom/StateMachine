@@ -18,12 +18,12 @@ public class HitDetection : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        ThirdPersonCharacter target = other.GetComponent<ThirdPersonCharacter>();
+        ThirdPersonCharacterController target = other.GetComponent<ThirdPersonCharacterController>();
 
         if(target && !transform.IsChildOf(target.transform))
         {
             target.Hurt(10);
-            Debug.Log("对" + target.gameObject.name + "造成了" + 10 + "点伤害,剩余生命" + target.hp);
+            Debug.Log("对" + target.gameObject.name + "造成了" + 10 + "点伤害,剩余生命" + target.currentHp);
         }
     }
 }

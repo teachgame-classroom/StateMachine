@@ -40,7 +40,7 @@ public class CharacterState : State
     {
         base.Update();
 
-        if(!character.isAlive)
+        if(!controller.isAlive)
         {
             stateMachine.SetState<CharacterState_Die>();
         }

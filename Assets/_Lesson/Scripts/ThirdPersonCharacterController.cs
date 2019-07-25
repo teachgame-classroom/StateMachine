@@ -13,10 +13,21 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     protected CharacterStateMachine stateMachine;
     protected ThirdPersonCharacter character;
 
+    public Spec baseSpec;
+    public Spec finalSpec;
+
+    List<Equipment> equipments = new List<Equipment>();
+
+    public int currentHp { get; private set; }
+
+    public GameObject hurtEffect;
+    public bool isAlive { get { return currentHp > 0; } }
+
+
     public bool hasTarget { get { return targetIdx >= 0 && targetList[targetIdx] != null; } }
 
 
-    public ThirdPersonCharacter target
+    public ThirdPersonCharacterController target
     {
         get
         {
@@ -31,7 +42,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         }
     }
 
-    protected List<ThirdPersonCharacter> targetList = new List<ThirdPersonCharacter>();
+    protected List<ThirdPersonCharacterController> targetList = new List<ThirdPersonCharacterController>();
     protected int targetIdx = -1;
 
     public Vector3 targetDirection
@@ -76,6 +87,8 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     // Start is called before the first frame update
     void Start()
     {
+        currentHp = baseSpec.hp;
+
         inventory = new Inventory(BACKPACK_SIZE, this);
 
         character = GetComponent<ThirdPersonCharacter>();
@@ -136,17 +149,18 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             InputManager.instance.InputEvent_Axis += OnInputAxis;
             InputManager.instance.InputEvent_Button += OnInputButton;
 
-            ThirdPersonCharacter[] characters = FindObjectsOfType<ThirdPersonCharacter>();
+            ThirdPersonCharacterController[] controllers = FindObjectsOfType<ThirdPersonCharacterController>();
 
-            for (int i = 0; i < characters.Length; i++)
+            for (int i = 0; i < controllers.Length; i++)
             {
-                if (characters[i].gameObject.name != "Player")
+                if (controllers[i].gameObject.name != "Player")
                 {
-                    targetList.Add(characters[i]);
+                    targetList.Add(controllers[i]);
                 }
             }
 
             UIManager.instance.InventorySlotClickEvent += inventory.OnInventorySlotClick;
+            UIManager.instance.InventorySlotHoverEvent += inventory.OnInventorySlotHover;
         }
     }
 
@@ -362,7 +376,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
             if (target && !target.isPlayer)
             {
-                target.character.Hurt(20);
+                target.Hurt(finalSpec.atk);
             }
         }
 
@@ -429,14 +443,40 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         return true;
     }
 
+    public void CaculatFinalSpec()
+    {
+        Spec spec = baseSpec;
+
+        for(int i = 0; i < equipments.Count; i++)
+        {
+            spec = Spec.Add(spec, equipments[i].spec);
+        }
+
+        finalSpec = spec;
+        Debug.Log("Final Spec:" + finalSpec.ToString());
+    }
+
     public bool Equip(Equipment equipment)
     {
         Weapon weapon = equipment as Weapon;
 
         if(weapon != null)
         {
+            for(int i = 0; i < equipments.Count; i++)
+            {
+                Weapon equipedWeapon = equipments[i] as Weapon;
+                if (equipedWeapon != null)
+                {
+                    equipments.RemoveAt(i);
+                }
+            }
             EquipWeapon(weapon.weaponType);
         }
+
+        equipments.Add(equipment);
+
+        CaculatFinalSpec();
+
 
         return true;
     }
@@ -452,7 +492,35 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
         currentWeapons[0].gameObject.SetActive(true);
         currentWeapons[1].gameObject.SetActive(true);
+
+        foreach(SlotMarker marker in currentWeapons[0].GetComponentsInChildren<SlotMarker>())
+        {
+            if(marker.slotType == SlotType.LeftShotPos)
+            {
+                weaponShotPos[0] = marker.transform;
+            }
+        }
+
+        foreach (SlotMarker marker in currentWeapons[1].GetComponentsInChildren<SlotMarker>())
+        {
+            if (marker.slotType == SlotType.RightShotPos)
+            {
+                weaponShotPos[1] = marker.transform;
+            }
+        }
     }
+
+    public void Hurt(int damage)
+    {
+        if (isAlive)
+        {
+            currentHp -= damage;
+            GameObject effect = Instantiate(hurtEffect, transform.position + Vector3.up, transform.rotation);
+            Destroy(effect, 2f);
+            Debug.Log(gameObject.name + "受到了" + damage + "点伤害");
+        }
+    }
+
 
     void OnTriggerEnter(Collider collider)
     {

@@ -136,6 +136,19 @@ public class Inventory
         InventoryChangeEvent(slotIdx, itemCount, sprite);
     }
 
+    public void OnInventorySlotHover(int slotIdx)
+    {
+        if(slotIdx >= 0 && slotIdx < grids.Length)
+        {
+            Item item = grids[slotIdx].item;
+
+            if(item != null)
+            {
+                Debug.Log(item.ToString());
+            }
+        }
+    }
+
     public bool HasItem(int slotIdx)
     {
         return grids[slotIdx].itemCount > 0 && grids[slotIdx].item != null;

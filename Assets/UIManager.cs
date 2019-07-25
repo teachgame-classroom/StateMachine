@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
 
     public delegate void InventorySlotDelegate(int slotIdx);
     public event InventorySlotDelegate InventorySlotClickEvent;
+    public event InventorySlotDelegate InventorySlotHoverEvent;
 
     float screenRatio { get { return (float)1280 / Screen.width; } }
 
@@ -153,6 +154,11 @@ public class UIManager : MonoBehaviour
 
             hoverSlotIdx = idx;
             itemSlots[hoverSlotIdx].Find("Hover").gameObject.SetActive(true);
+        }
+
+        if(InventorySlotHoverEvent != null)
+        {
+            InventorySlotHoverEvent(idx);
         }
     }
 
