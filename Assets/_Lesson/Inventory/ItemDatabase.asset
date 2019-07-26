@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: ItemDatabase
   m_EditorClassIdentifier: 
   itemInfos:
-  - itemId: 1
-    itemName: GunAxe
+  - itemName: GunAxe
+    itemId: 1
+    className: GunAxe
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
     weaponType: 0
     spec:
       atk: 100
@@ -26,8 +30,12 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
-  - itemId: 2
-    itemName: Axe
+  - itemName: Axe
+    itemId: 2
+    className: Axe
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
     weaponType: 1
     spec:
       atk: 50
@@ -39,8 +47,12 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
-  - itemId: 3
-    itemName: Gun
+  - itemName: Gun
+    itemId: 3
+    className: Gun
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
     weaponType: 2
     spec:
       atk: 35
@@ -52,21 +64,29 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
-  - itemId: 4
-    itemName: Health
+  - itemName: Health
+    itemId: 4
+    className: Potion
+    consumeWhenUsed: 1
+    isEffectPermanent: 0
+    effectDuration: 5
     weaponType: 0
     spec:
-      atk: 0
-      def: 0
-      dex: 0
-      hp: 0
+      atk: 10
+      def: 5
+      dex: 5
+      hp: 10
       mana: 0
       fury: 0
       recoverHp: 100
       recoverMana: 0
       recoverFury: 0
-  - itemId: 5
-    itemName: Mana
+  - itemName: Mana
+    itemId: 5
+    className: Potion
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
     weaponType: 0
     spec:
       atk: 0
@@ -78,8 +98,12 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 100
       recoverFury: 0
-  - itemId: 6
-    itemName: Fury
+  - itemName: Fury
+    itemId: 6
+    className: Potion
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
     weaponType: 0
     spec:
       atk: 0

@@ -14,6 +14,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     protected ThirdPersonCharacter character;
 
     public Spec baseSpec;
+    public List<Spec> extraSpec = new List<Spec>();
     public Spec finalSpec;
 
     List<Equipment> equipments = new List<Equipment>();
@@ -440,6 +441,13 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
     public bool UseItem(Item item)
     {
+        Potion potion = item as Potion;
+
+        if(potion != null)
+        {
+            ChangeSpec(potion.spec, potion.isEffectPermanent, potion.effectDuration);
+        }
+
         return true;
     }
 
@@ -521,6 +529,32 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         }
     }
 
+    public void ChangeSpec(Spec extraSpec, bool isPermernate, float duration = 0)
+    {
+        if(isPermernate == false)
+        {
+            int idx = this.extraSpec.Count;
+            this.extraSpec.Add(Spec.Clone(extraSpec));
+
+            Debug.Log("得到临时属性加成：" + this.extraSpec.ToString() + "，持续时间：" + duration);
+            finalSpec = Spec.Add(finalSpec, this.extraSpec[idx]);
+            Debug.Log("最终属性临时变为：" + this.finalSpec.ToString());
+            StartCoroutine(CleanExtraSpec(duration, idx));
+        }
+        else
+        {
+            this.baseSpec = Spec.Add(this.baseSpec, extraSpec);
+            Debug.Log("得到永久属性加成：" + extraSpec.ToString() + "，基础属性变为：" + this.baseSpec);
+        }
+    }
+
+    IEnumerator CleanExtraSpec(float delay, int idx)
+    {
+        yield return new WaitForSeconds(delay);
+        finalSpec = Spec.Sub(finalSpec, this.extraSpec[idx]);
+        this.extraSpec[idx].ClearSpec();
+        Debug.Log("临时加成结束，最终属性恢复为：" + this.finalSpec.ToString());
+    }
 
     void OnTriggerEnter(Collider collider)
     {

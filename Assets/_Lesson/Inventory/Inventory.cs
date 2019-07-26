@@ -49,18 +49,9 @@ public class Inventory
 
     public bool PutInItem(int itemId, int itemCount = 1)
     {
-        if(itemId <= 3)
-        {
-            Item item = ItemFactory.CreateWeapon(itemId);
-            item.owner = this.owner;
-            return PutInItem(item, itemCount);
-        }
-        else
-        {
-            Item item = ItemFactory.CreateItem(itemId);
-            item.owner = this.owner;
-            return PutInItem(item, itemCount);
-        }
+        Item item = ItemFactory.CreateItem(itemId);
+        item.owner = this.owner;
+        return PutInItem(item, itemCount);
     }
 
     public bool PutInItem(Item item, int itemCount = 1)

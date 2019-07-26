@@ -94,6 +94,26 @@ public class Spec
         return result;
     }
 
+    public static Spec Clone(Spec origin)
+    {
+        Spec newSpec = new Spec();
+
+        for(int i = 0; i < Spec.SPEC_COUNT; i++)
+        {
+            newSpec[i] = origin[i];
+        }
+
+        return newSpec;
+    }
+
+    public void ClearSpec()
+    {
+        for(int i = 0; i < Spec.SPEC_COUNT; i++)
+        {
+            this[i] = 0;
+        }
+    }
+
     public static Spec Add(Spec specA, Spec specB)
     {
         Spec newSpec = new Spec();
@@ -129,8 +149,6 @@ public class Spec
 
         return newSpec;
     }
-
-
 }
 
 public interface IItemOwner
@@ -145,52 +163,86 @@ public class ItemFactory
     {
         ItemInfo itemInfo = ItemDatabaseManager.instance.GetItemInfo(itemId);
 
-        if(itemInfo != null)
-        {
-            return new Item(itemId, itemInfo.itemName, itemInfo.spec, true);
-        }
-
-        return null;
-    }
-
-    public static Weapon CreateWeapon(int itemId)
-    {
-        ItemInfo itemInfo = ItemDatabaseManager.instance.GetItemInfo(itemId);
-
         if (itemInfo != null)
         {
-            return new Weapon(itemId, itemInfo.itemName, itemInfo.spec, itemInfo.weaponType);
+            ItemDatabaseManager.itemConstructor ctor = ItemDatabaseManager.instance.GetConstructor(itemInfo.className);
+            return ctor(new object[] { itemInfo, null }) as Item;
+            //return new Item(itemInfo, null);
         }
 
         return null;
-
     }
 }
 
 public enum WeaponType { GunAxe, Axe, Gun }
 
-public class Weapon : Equipment
+public class Axe : Weapon
 {
-    public WeaponType weaponType;
-
-    public Weapon(int itemId, string itemName, Spec spec, WeaponType weaponType) : this(itemId, itemName, spec, weaponType, null)
+    public Axe(ItemInfo info, IItemOwner owner) : base(info, owner)
     {
+
     }
 
-    public Weapon(int itemId, string itemName, Spec spec, WeaponType weaponType, IItemOwner owner) : base(itemId, itemName, spec, owner)
+    public Axe(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
-        this.weaponType = weaponType;
+
+    }
+}
+
+public class Gun : Weapon
+{
+    public Gun(ItemInfo info, IItemOwner owner) : base(info, owner)
+    {
+
+    }
+
+    public Gun(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    {
+
+    }
+}
+
+
+public class GunAxe : Weapon
+{
+    public GunAxe(ItemInfo info, IItemOwner owner) : base(info, owner)
+    {
+
+    }
+
+    public GunAxe(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    {
+
+    }
+}
+
+public class Weapon : Equipment
+{
+
+    public Weapon(ItemInfo info, IItemOwner owner) : base(info, owner)
+    {
+
+    }
+
+    public Weapon(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    {
+
     }
 }
 
 public class Equipment : Item
 {
-    public Equipment(int itemId, string itemName, Spec spec) : this(itemId, itemName, spec, null)
+    public Equipment(ItemInfo info, IItemOwner owner) : base(info, owner)
     {
 
     }
 
-    public Equipment(int itemId, string itemName, Spec spec, IItemOwner owner) : base(itemId, itemName, spec, owner)
+    public Equipment(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -209,34 +261,61 @@ public class Equipment : Item
     }
 }
 
+public class Potion : Item
+{
+    public Potion(ItemInfo info, IItemOwner owner) : base(info, owner)
+    {
+
+    }
+
+    public Potion(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    {
+
+    }
+
+
+    public override void Use()
+    {
+        base.Use();
+        owner.UseItem(this);
+    }
+}
+
 public class Item
 {
-    public InventoryGrid grid;
-    public bool consumeWhenUsed;
-    public IItemOwner owner;
     public int itemId;
     public string itemName;
-    public Sprite sprite;
-
     public Spec spec;
 
-    public Item(int itemId, string itemName, Spec spec, bool consumeWhenUsed) : this(itemId, itemName, spec, consumeWhenUsed, null)
-    {
-    }
+    public bool consumeWhenUsed;
+    public bool isEffectPermanent;
+    public float effectDuration;
+    public WeaponType weaponType;
 
-    public Item(int itemId, string itemName, Spec spec, IItemOwner owner) : this(itemId, itemName, spec, false, owner)
-    {
-    }
+    public InventoryGrid grid;
+    public IItemOwner owner;
+    public Sprite sprite;
 
-    public Item(int itemId, string itemName, Spec spec, bool consumeWhenUsed, IItemOwner owner)
+    public Item(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
     {
         this.itemId = itemId;
         this.itemName = itemName;
-        this.spec = spec;
+        this.spec = Spec.Clone(spec);
         this.consumeWhenUsed = consumeWhenUsed;
+        this.isEffectPermanent = isEffectPermernate;
+        this.effectDuration = effectDuration;
+        this.weaponType = weaponType;
+
         this.owner = owner;
         sprite = ResourceManager.instance.GetSprite(itemId);
-//        sprite = Resources.Load<Sprite>("ItemIcons/" + "Icon_" + this.itemId);
+    }
+
+
+    public Item(ItemInfo info, IItemOwner owner) : this
+        (info.itemId, info.itemName, info.spec, info.consumeWhenUsed, info.isEffectPermanent, info.effectDuration, info.weaponType, owner)
+    {
+
     }
 
     public override string ToString()

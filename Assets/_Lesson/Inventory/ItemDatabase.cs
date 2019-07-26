@@ -5,8 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class ItemInfo
 {
-    public int itemId;
     public string itemName;
+    public int itemId;
+    public string className;
+    public bool consumeWhenUsed;
+    public bool isEffectPermanent;
+    public float effectDuration;
     public WeaponType weaponType;
     public Spec spec;
 }
