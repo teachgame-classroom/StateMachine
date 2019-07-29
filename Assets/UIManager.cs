@@ -11,7 +11,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public Sprite[] testSprites;
+    public RectTransform dragIcon;
+
     public RectTransform crosshair;
     public RectTransform characterPanel;
     private RectTransform inventoryPanel;
@@ -23,6 +24,11 @@ public class UIManager : MonoBehaviour
     public event InventorySlotDelegate InventorySlotClickEvent;
     public event InventorySlotDelegate InventorySlotHoverEvent;
 
+    public delegate void InventoryDragDropDelegate(int gridIdx);
+    public event InventoryDragDropDelegate InventoryBeginDragEvent;
+    public event InventoryDragDropDelegate InventoryDropEvent;
+    public event InventoryDragDropDelegate InventoryDropEmptyEvent;
+
     float screenRatio { get { return (float)1280 / Screen.width; } }
 
     void Awake()
@@ -33,7 +39,6 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         GameObject player = GameObject.Find("Player");
-        player.GetComponent<ThirdPersonCharacterController>().inventory.InventoryChangeEvent += OnInventoryChange;
 
         TogglePanel(characterPanel, false);
 
@@ -51,15 +56,12 @@ public class UIManager : MonoBehaviour
 
         Debug.Log(itemSlots.Length);
 
-        for(int i = 0; i < testSprites.Length; i++)
-        {
-            SetItemSlotSprite(i, testSprites[i]);
-        }
-
         SetItemHover(-1);
+
+        dragIcon = transform.Find("DragIcon") as RectTransform;
     }
 
-    private void OnInventoryChange(int gridIdx, int itemCount, Sprite sprite)
+    public void OnInventoryChange(int gridIdx, int itemCount, Sprite sprite)
     {
         if(itemCount > 0)
         {
@@ -93,6 +95,11 @@ public class UIManager : MonoBehaviour
     public void ToggleCrosshair(bool setActive)
     {
         crosshair.gameObject.SetActive(setActive);
+    }
+
+    public Vector3 ScreenToCanvasPoint(Vector3 screenPos, float screenRatio)
+    {
+        return screenPos * screenRatio;
     }
 
     public void TogglePanel(RectTransform panel, bool setActive)
@@ -160,6 +167,63 @@ public class UIManager : MonoBehaviour
         {
             InventorySlotHoverEvent(idx);
         }
+    }
+
+    public void OnSlotBeginDrag(int slotIdx)
+    {
+        if(InventoryBeginDragEvent != null)
+        {
+            InventoryBeginDragEvent(slotIdx);
+        }
+    }
+
+    public void OnHasItemNotify(int slotIdx)
+    {
+        Debug.Log("可以拖动");
+        dragIcon.gameObject.SetActive(true);
+
+        dragIcon.GetComponent<Image>().sprite = itemSlots[slotIdx].Find("Icon").GetComponent<Image>().sprite;
+        dragIcon.GetComponentInChildren<Text>().text = itemSlots[slotIdx].Find("Number").GetComponent<Text>().text;
+
+        dragIcon.anchoredPosition = ScreenToCanvasPoint(Input.mousePosition, screenRatio);
+
+        itemSlots[slotIdx].Find("Icon").gameObject.SetActive(false);
+        itemSlots[slotIdx].Find("Number").gameObject.SetActive(false);
+    }
+
+    public void OnSlotDrag(int slotIdx)
+    {
+        if(dragIcon.gameObject.activeSelf)
+        {
+            dragIcon.anchoredPosition = ScreenToCanvasPoint(Input.mousePosition, screenRatio);
+        }
+    }
+
+
+    public void OnSlotDrop(int slotIdx)
+    {
+        if(InventoryDropEvent != null)
+        {
+            InventoryDropEvent(slotIdx);
+        }
+
+        //itemSlots[slotIdx].Find("Icon").gameObject.SetActive(true);
+        //itemSlots[slotIdx].Find("Number").gameObject.SetActive(true);
+
+        //itemSlots[slotIdx].Find("Icon").GetComponent<Image>().sprite = dragIcon.GetComponent<Image>().sprite;
+        //itemSlots[slotIdx].Find("Number").GetComponent<Text>().text = dragIcon.GetComponentInChildren<Text>().text;
+
+        dragIcon.gameObject.SetActive(false);
+    }
+
+    public void OnEmptyDrop(int slotIdx)
+    {
+        if(InventoryDropEmptyEvent != null)
+        {
+            InventoryDropEmptyEvent(slotIdx);
+        }
+
+        dragIcon.gameObject.SetActive(false);
     }
 
     public void OnSlotClicked(int slotIdx)

@@ -12,8 +12,14 @@ public class Inventory
 {
     public IItemOwner owner;
 
+    public int gridOnDrag = -1;
+    public int gridOnDrop = -1;
+
     public delegate void InventoryChangeDelegate(int gridIdx, int itemCount, Sprite sprite);
     public event InventoryChangeDelegate InventoryChangeEvent;
+
+    public delegate void InventorySlotDelegate(int gridIdx);
+    public event InventorySlotDelegate InventoryHasItemEvent;
 
     private InventoryGrid[] grids;
 
@@ -105,6 +111,67 @@ public class Inventory
         }
 
         return result;
+    }
+
+    public void OnInventoryBeginDrag(int slotIdx)
+    {
+        if(HasItem(slotIdx))
+        {
+            Debug.Log("要拖动的格子上有物品");
+            gridOnDrag = slotIdx;
+            if(InventoryHasItemEvent != null)
+            {
+                InventoryHasItemEvent(slotIdx);
+            }
+        }
+    }
+
+    public void OnInventoryDrop(int slotIdx)
+    {
+        if(gridOnDrag == -1 || slotIdx == -1)
+        {
+            return;
+        }
+
+        gridOnDrop = slotIdx;
+        SwitchItem(gridOnDrag, gridOnDrop);
+
+        gridOnDrag = -1;
+        gridOnDrop = -1;
+    }
+
+    public void OnInventoryEmptyDrop(int slotIdx)
+    {
+        gridOnDrag = -1;
+        gridOnDrop = -1;
+        Refresh();
+    }
+
+    public void SwitchItem(int idx_a, int idx_b)
+    {
+        InventoryGrid grid_a = grids[idx_a];
+        InventoryGrid grid_b = grids[idx_b];
+
+        Item tempItem = grid_a.item;
+        int tempItemCount = grid_a.itemCount;
+
+        grid_a.item = grid_b.item;
+        grid_a.itemCount = grid_b.itemCount;
+
+        if(grid_a.item != null)
+        {
+            grid_a.item.grid = grid_a;
+        }
+
+        grid_b.item = tempItem;
+        grid_b.itemCount = tempItemCount;
+
+        if(grid_b.item != null)
+        {
+            grid_b.item.grid = grid_b;
+        }
+
+        Refresh();
     }
 
     public void OnInventorySlotClick(int slotIdx)

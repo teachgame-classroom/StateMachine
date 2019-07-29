@@ -162,6 +162,12 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
             UIManager.instance.InventorySlotClickEvent += inventory.OnInventorySlotClick;
             UIManager.instance.InventorySlotHoverEvent += inventory.OnInventorySlotHover;
+            UIManager.instance.InventoryBeginDragEvent += inventory.OnInventoryBeginDrag;
+            UIManager.instance.InventoryDropEvent += inventory.OnInventoryDrop;
+            UIManager.instance.InventoryDropEmptyEvent += inventory.OnInventoryEmptyDrop;
+            inventory.InventoryChangeEvent += UIManager.instance.OnInventoryChange;
+            inventory.InventoryHasItemEvent += UIManager.instance.OnHasItemNotify;
+
         }
     }
 
@@ -181,12 +187,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
             if(Input.GetKeyDown(KeyCode.T))
             {
-                TestPutInItem(testItemIdx);
-                testItemIdx++;
-                if(testItemIdx >= testItems.Length)
-                {
-                    testItemIdx = 0;
-                }
+                inventory.SwitchItem(0, 1);
             }
 
             if(Input.GetKeyDown(KeyCode.Alpha1))
