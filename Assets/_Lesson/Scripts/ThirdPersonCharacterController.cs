@@ -81,6 +81,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     public LineRenderer[] gunTrailEffects;
 
     public const int BACKPACK_SIZE = 40;
+    public const int EQUIPMENT_SIZE = 12;
     public Inventory inventory;
 
     public Item[] testItems = new Item[8];
@@ -90,7 +91,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     {
         currentHp = baseSpec.hp;
 
-        inventory = new Inventory(BACKPACK_SIZE, this);
+        inventory = new Inventory(BACKPACK_SIZE, EQUIPMENT_SIZE, this);
 
         character = GetComponent<ThirdPersonCharacter>();
         stateMachine = new CharacterStateMachine(character);

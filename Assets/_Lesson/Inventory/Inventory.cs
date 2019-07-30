@@ -15,13 +15,22 @@ public class Inventory
     public int gridOnDrag = -1;
     public int gridOnDrop = -1;
 
-    public delegate void InventoryChangeDelegate(int gridIdx, int itemCount, Sprite sprite);
+    public delegate void InventoryChangeDelegate(InventorySlotType slotType, int gridIdx, int itemCount, Sprite sprite);
     public event InventoryChangeDelegate InventoryChangeEvent;
 
-    public delegate void InventorySlotDelegate(int gridIdx);
+    public delegate void InventorySlotDelegate(InventorySlotType slotType, int gridIdx);
     public event InventorySlotDelegate InventoryHasItemEvent;
 
     private InventoryGrid[] grids;
+
+    private int backpackSize;
+    private int equipmentSize;
+
+    private int weaponLeftSlot = 10;
+    private int weaponRightSlot = 11;
+
+    public int WeaponLeftSlot_InternalIdx { get { return backpackSize + weaponLeftSlot; } }
+    public int WeaponRightSlot_InternalIdx { get { return backpackSize + weaponRightSlot; } }
 
     public Inventory(int capacity, IItemOwner owner) : this(capacity)
     {
@@ -38,17 +47,58 @@ public class Inventory
         }
     }
 
+    public Inventory(int backpackSize, int equipmentSize, IItemOwner owner) : this(backpackSize, equipmentSize)
+    {
+        this.owner = owner;
+    }
+
+    public Inventory(int backpackSize, int equipmentSize) : this( backpackSize + equipmentSize )
+    {
+        this.backpackSize = backpackSize;
+        this.equipmentSize = equipmentSize;
+    }
+
+    public int GetInternalSlotIndex(InventorySlotType slotType, int slotIdx)
+    {
+        if(slotType == InventorySlotType.Backpack)
+        {
+            return slotIdx;
+        }
+        else
+        {
+            return slotIdx + this.backpackSize;
+        }
+    }
+
+    public InventorySlotType GetSlotType(int internalSlotIdx, out int slotIndexOfType)
+    {
+        if(internalSlotIdx < backpackSize)
+        {
+            slotIndexOfType = internalSlotIdx;
+            return InventorySlotType.Backpack;
+        }
+        else
+        {
+            slotIndexOfType = internalSlotIdx - backpackSize;
+            return InventorySlotType.Equipment;
+        }
+    }
+
     public void Refresh()
     {
         for(int i = 0; i < grids.Length; i++)
         {
+            int slotIndexOfType;
+
+            InventorySlotType inventorySlotType = GetSlotType(i, out slotIndexOfType);
+
             if(grids[i].item != null)
             {
-                InventoryChangeEvent(i, grids[i].itemCount, grids[i].item.sprite);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[i].itemCount, grids[i].item.sprite);
             }
             else
             {
-                InventoryChangeEvent(i, 0, null);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, 0, null);
             }
         }
     }
@@ -102,7 +152,10 @@ public class Inventory
 
             if (InventoryChangeEvent != null)
             {
-                InventoryChangeEvent(putInGridIdx, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite);
+                int slotIndexOfType;
+                InventorySlotType inventorySlotType = GetSlotType(putInGridIdx, out slotIndexOfType);
+
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite);
             }
         }
         else
@@ -113,38 +166,142 @@ public class Inventory
         return result;
     }
 
-    public void OnInventoryBeginDrag(int slotIdx)
+    public void OnInventoryBeginDrag(InventorySlotType slotType, int slotIdx)
     {
+        slotIdx = GetInternalSlotIndex(slotType, slotIdx);
+
         if(HasItem(slotIdx))
         {
             Debug.Log("要拖动的格子上有物品");
             gridOnDrag = slotIdx;
             if(InventoryHasItemEvent != null)
             {
-                InventoryHasItemEvent(slotIdx);
+                int slotIndexOfType;
+
+                InventorySlotType inventorySlotType = GetSlotType(slotIdx, out slotIndexOfType);
+
+                InventoryHasItemEvent(inventorySlotType, slotIndexOfType);
             }
         }
     }
 
-    public void OnInventoryDrop(int slotIdx)
+    public void OnInventoryDrop(InventorySlotType slotType, int slotIdx)
     {
-        if(gridOnDrag == -1 || slotIdx == -1)
+        slotIdx = GetInternalSlotIndex(slotType, slotIdx);
+
+        if (gridOnDrag == -1 || slotIdx == -1)
         {
             return;
         }
 
         gridOnDrop = slotIdx;
-        SwitchItem(gridOnDrag, gridOnDrop);
+
+        if(CanSwitch(gridOnDrag, gridOnDrop))
+        {
+            SwitchItem(gridOnDrag, gridOnDrop);
+
+            TryEquip(gridOnDrag);
+            TryEquip(gridOnDrop);
+        }
+        else
+        {
+            Refresh();
+        }
 
         gridOnDrag = -1;
         gridOnDrop = -1;
     }
 
-    public void OnInventoryEmptyDrop(int slotIdx)
+    private bool TryEquip(int slotIdx)
     {
+        if (IsEquipmentSlot(slotIdx))
+        {
+            Item item = grids[slotIdx].item;
+
+            if (item != null)
+            {
+                Equipment equipment = item as Equipment;
+
+                if (equipment != null)
+                {
+                    equipment.Equip();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void OnInventoryEmptyDrop(InventorySlotType slotType, int slotIdx)
+    {
+        slotIdx = GetInternalSlotIndex(slotType, slotIdx);
+
         gridOnDrag = -1;
         gridOnDrop = -1;
         Refresh();
+    }
+
+    public bool IsEquipmentSlot(int idx)
+    {
+        return idx >= backpackSize;
+    }
+
+    public bool CanSwitch(int idx_a, int idx_b)
+    {
+        bool SlotA_Match_ItemB = IsSlotMatchItem(idx_a, grids[idx_b].item);
+        bool SlotB_Match_ItemA = IsSlotMatchItem(idx_b, grids[idx_a].item);
+        return SlotA_Match_ItemB && SlotB_Match_ItemA;
+    }
+
+    public bool IsSlotMatchItem(int slotIdx, Item item)
+    {
+        if (item == null) return true;
+
+        int slotIndexOfType;
+
+        InventorySlotType slotType = GetSlotType(slotIdx, out slotIndexOfType);
+
+        if(slotType == InventorySlotType.Backpack)
+        {
+            return true;
+        }
+        else
+        {
+            Equipment equipment = item as Equipment;
+
+            if(equipment != null)
+            {
+                Weapon weapon = equipment as Weapon;
+
+                if(slotIdx != WeaponLeftSlot_InternalIdx && slotIdx != WeaponRightSlot_InternalIdx)
+                {
+                    if(weapon == null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(weapon == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public void SwitchItem(int idx_a, int idx_b)
@@ -174,8 +331,10 @@ public class Inventory
         Refresh();
     }
 
-    public void OnInventorySlotClick(int slotIdx)
+    public void OnInventorySlotClick(InventorySlotType slotType, int slotIdx)
     {
+        slotIdx = GetInternalSlotIndex(slotType, slotIdx);
+
         Debug.Log("背包收到了" + slotIdx + "号格子的点击事件");
         if(HasItem(slotIdx))
         {
@@ -191,12 +350,16 @@ public class Inventory
             sprite = grids[slotIdx].item.sprite;
         }
 
-        InventoryChangeEvent(slotIdx, itemCount, sprite);
+        int slotIndexOfType;
+        InventorySlotType inventorySlotType = GetSlotType(slotIdx, out slotIndexOfType);
+        InventoryChangeEvent(inventorySlotType, slotIndexOfType, itemCount, sprite);
     }
 
-    public void OnInventorySlotHover(int slotIdx)
+    public void OnInventorySlotHover(InventorySlotType slotType, int slotIdx)
     {
-        if(slotIdx >= 0 && slotIdx < grids.Length)
+        slotIdx = GetInternalSlotIndex(slotType, slotIdx);
+
+        if (slotIdx >= 0 && slotIdx < grids.Length)
         {
             Item item = grids[slotIdx].item;
 

@@ -15,16 +15,17 @@ public class UIManager : MonoBehaviour
 
     public RectTransform crosshair;
     public RectTransform characterPanel;
-    private RectTransform inventoryPanel;
-    private RectTransform[] itemSlots;
+    private RectTransform backpackPanel;
+    private RectTransform equipmentPanel;
 
-    private int hoverSlotIdx = -1;
+    private RectTransform[] backpackSlots;
+    private RectTransform[] equipmentSlots;
 
-    public delegate void InventorySlotDelegate(int slotIdx);
+    public delegate void InventorySlotDelegate(InventorySlotType slotType, int slotIdx);
     public event InventorySlotDelegate InventorySlotClickEvent;
     public event InventorySlotDelegate InventorySlotHoverEvent;
 
-    public delegate void InventoryDragDropDelegate(int gridIdx);
+    public delegate void InventoryDragDropDelegate(InventorySlotType slotType, int gridIdx);
     public event InventoryDragDropDelegate InventoryBeginDragEvent;
     public event InventoryDragDropDelegate InventoryDropEvent;
     public event InventoryDragDropDelegate InventoryDropEmptyEvent;
@@ -42,37 +43,55 @@ public class UIManager : MonoBehaviour
 
         TogglePanel(characterPanel, false);
 
-        inventoryPanel = characterPanel.Find("Content/Extension (Bags)") as RectTransform;
+        backpackPanel = characterPanel.Find("Content/Extension (Bags)") as RectTransform;
 
-        Transform slotsRoot = inventoryPanel.Find("Slots Grid");
+        Transform backpackRoot = backpackPanel.Find("Slots Grid");
 
-        itemSlots = new RectTransform[slotsRoot.childCount];
+        backpackSlots = new RectTransform[backpackRoot.childCount];
 
-        for(int i = 0; i < slotsRoot.childCount; i++)
+        for(int i = 0; i < backpackRoot.childCount; i++)
         {
-            itemSlots[i] = slotsRoot.GetChild(i) as RectTransform;
-            itemSlots[i].GetComponent<SlotHoverDetection>().slotIdx = i;
+            backpackSlots[i] = backpackRoot.GetChild(i) as RectTransform;
+            backpackSlots[i].GetComponent<SlotHoverDetection>().slotIdx = i;
         }
 
-        Debug.Log(itemSlots.Length);
+        equipmentPanel = characterPanel.Find("Content/Equip Slots") as RectTransform;
 
-        SetItemHover(-1);
+        SlotHoverDetection[] hoverDetections = equipmentPanel.GetComponentsInChildren<SlotHoverDetection>();
+        List<RectTransform> equipmentRectList = new List<RectTransform>();
+        for(int i = 0; i < hoverDetections.Length; i++)
+        {
+            hoverDetections[i].slotIdx = i;
+            equipmentRectList.Add(hoverDetections[i].transform as RectTransform);
+        }
+
+        equipmentSlots = equipmentRectList.ToArray();
+
+        Debug.Log(backpackSlots.Length);
+
+        SetItemHover(InventorySlotType.Backpack,-1);
+        SetItemHover(InventorySlotType.Equipment, -1);
 
         dragIcon = transform.Find("DragIcon") as RectTransform;
     }
 
-    public void OnInventoryChange(int gridIdx, int itemCount, Sprite sprite)
+    public void OnInventoryChange(InventorySlotType inventorySlotType, int slotIdx, int itemCount, Sprite sprite)
     {
+        RectTransform[] slots = GetSlotByInventoryType(inventorySlotType);
+
         if(itemCount > 0)
         {
-            SetItemSlotSprite(gridIdx, sprite);
+            SetItemSlotSprite(slots, slotIdx, sprite);
         }
         else
         {
-            SetItemSlotSprite(gridIdx, null);
+            SetItemSlotSprite(slots, slotIdx, null);
         }
 
-        SetItemSlotCountText(gridIdx, itemCount);
+        if (inventorySlotType == InventorySlotType.Backpack)
+        {
+            SetItemSlotCountText(slots, slotIdx, itemCount);
+        }
     }
 
     void Update()
@@ -113,9 +132,10 @@ public class UIManager : MonoBehaviour
         return characterPanel.gameObject.activeSelf;
     }
 
-    public void SetItemSlotSprite(int idx, Sprite sprite)
+    public void SetItemSlotSprite(RectTransform[] slots, int idx, Sprite sprite)
     {
-        Image iconImage = itemSlots[idx].Find("Icon").GetComponent<Image>();
+        Debug.Log(slots[idx].gameObject.name);
+        Image iconImage = slots[idx].Find("Icon").GetComponent<Image>();
         iconImage.sprite = sprite;
 
         if(iconImage.sprite)
@@ -128,9 +148,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void SetItemSlotCountText(int idx, int number)
+    public void SetItemSlotCountText(RectTransform[] slots, int idx, int number)
     {
-        Text text = itemSlots[idx].Find("Number").GetComponent<Text>();
+        Text text = slots[idx].Find("Number").GetComponent<Text>();
 
         if (number > 0)
         {
@@ -143,55 +163,78 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void SetItemHover(int idx)
+    public void SetItemHover(InventorySlotType slotType, int idx)
     {
-        if(idx < 0)
+        RectTransform[] slots = GetSlotByInventoryType(slotType);
+
+        SetItemHover(slots, idx);
+
+        if (InventorySlotHoverEvent != null)
         {
-            for(int i = 0; i < itemSlots.Length; i++)
+            InventorySlotHoverEvent(slotType, idx);
+        }
+    }
+
+    private RectTransform[] GetSlotByInventoryType(InventorySlotType slotType)
+    {
+        RectTransform[] slots;
+
+        if (slotType == InventorySlotType.Backpack)
+        {
+            slots = backpackSlots;
+        }
+        else
+        {
+            slots = equipmentSlots;
+        }
+
+        return slots;
+    }
+
+    public void SetItemHover(RectTransform[] slots, int idx)
+    {
+        if (idx < 0)
+        {
+            for (int i = 0; i < slots.Length; i++)
             {
-                itemSlots[i].Find("Hover").gameObject.SetActive(false);
+                slots[i].Find("Hover").gameObject.SetActive(false);
             }
         }
         else
         {
-            if(hoverSlotIdx >= 0)
-            {
-                itemSlots[hoverSlotIdx].Find("Hover").gameObject.SetActive(false);
-            }
-
-            hoverSlotIdx = idx;
-            itemSlots[hoverSlotIdx].Find("Hover").gameObject.SetActive(true);
-        }
-
-        if(InventorySlotHoverEvent != null)
-        {
-            InventorySlotHoverEvent(idx);
+            slots[idx].Find("Hover").gameObject.SetActive(true);
         }
     }
 
-    public void OnSlotBeginDrag(int slotIdx)
+
+    public void OnSlotBeginDrag(InventorySlotType slotType, int slotIdx)
     {
         if(InventoryBeginDragEvent != null)
         {
-            InventoryBeginDragEvent(slotIdx);
+            InventoryBeginDragEvent(slotType, slotIdx);
         }
     }
 
-    public void OnHasItemNotify(int slotIdx)
+    public void OnHasItemNotify(InventorySlotType slotType, int slotIdx)
     {
+        RectTransform[] slots = GetSlotByInventoryType(slotType);
+
         Debug.Log("可以拖动");
         dragIcon.gameObject.SetActive(true);
 
-        dragIcon.GetComponent<Image>().sprite = itemSlots[slotIdx].Find("Icon").GetComponent<Image>().sprite;
-        dragIcon.GetComponentInChildren<Text>().text = itemSlots[slotIdx].Find("Number").GetComponent<Text>().text;
+        dragIcon.GetComponent<Image>().sprite = slots[slotIdx].Find("Icon").GetComponent<Image>().sprite;
+
+        string text = slots[slotIdx].Find("Number").GetComponent<Text>().text;
+        dragIcon.GetComponentInChildren<Text>().text = text;
 
         dragIcon.anchoredPosition = ScreenToCanvasPoint(Input.mousePosition, screenRatio);
 
-        itemSlots[slotIdx].Find("Icon").gameObject.SetActive(false);
-        itemSlots[slotIdx].Find("Number").gameObject.SetActive(false);
+        slots[slotIdx].Find("Icon").gameObject.SetActive(false);
+
+        slots[slotIdx].Find("Number").gameObject.SetActive(false);
     }
 
-    public void OnSlotDrag(int slotIdx)
+    public void OnSlotDrag(InventorySlotType slotType, int slotIdx)
     {
         if(dragIcon.gameObject.activeSelf)
         {
@@ -200,11 +243,11 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void OnSlotDrop(int slotIdx)
+    public void OnSlotDrop(InventorySlotType slotType, int slotIdx)
     {
         if(InventoryDropEvent != null)
         {
-            InventoryDropEvent(slotIdx);
+            InventoryDropEvent(slotType, slotIdx);
         }
 
         //itemSlots[slotIdx].Find("Icon").gameObject.SetActive(true);
@@ -216,22 +259,22 @@ public class UIManager : MonoBehaviour
         dragIcon.gameObject.SetActive(false);
     }
 
-    public void OnEmptyDrop(int slotIdx)
+    public void OnEmptyDrop(InventorySlotType slotType, int slotIdx)
     {
         if(InventoryDropEmptyEvent != null)
         {
-            InventoryDropEmptyEvent(slotIdx);
+            InventoryDropEmptyEvent(slotType, slotIdx);
         }
 
         dragIcon.gameObject.SetActive(false);
     }
 
-    public void OnSlotClicked(int slotIdx)
+    public void OnSlotClicked(InventorySlotType slotType, int slotIdx)
     {
         Debug.Log("点击了" + slotIdx + "号格子");
         if(InventorySlotClickEvent != null)
         {
-            InventorySlotClickEvent(slotIdx);
+            InventorySlotClickEvent(slotType, slotIdx);
         }
     }
 
