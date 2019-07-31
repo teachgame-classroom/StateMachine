@@ -183,8 +183,8 @@ public class Axe : Weapon
 
     }
 
-    public Axe(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
-        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    public Axe(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -197,8 +197,8 @@ public class Gun : Weapon
 
     }
 
-    public Gun(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
-        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    public Gun(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -212,8 +212,8 @@ public class GunAxe : Weapon
 
     }
 
-    public GunAxe(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
-        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    public GunAxe(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -227,8 +227,8 @@ public class Weapon : Equipment
 
     }
 
-    public Weapon(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
-        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    public Weapon(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -241,8 +241,8 @@ public class Equipment : Item
 
     }
 
-    public Equipment(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
-        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    public Equipment(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -261,6 +261,35 @@ public class Equipment : Item
     }
 }
 
+public class Amulet : Equipment
+{
+    public Amulet(ItemInfo info, IItemOwner owner) : base(info, owner)
+    {
+
+    }
+
+    public Amulet(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    {
+
+    }
+}
+
+public class Belt : Equipment
+{
+    public Belt(ItemInfo info, IItemOwner owner) : base(info, owner)
+    {
+
+    }
+
+    public Belt(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    {
+
+    }
+}
+
+
 public class Potion : Item
 {
     public Potion(ItemInfo info, IItemOwner owner) : base(info, owner)
@@ -268,8 +297,8 @@ public class Potion : Item
 
     }
 
-    public Potion(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
-        : base(itemId, itemName, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
+    public Potion(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -297,7 +326,7 @@ public class Item
     public IItemOwner owner;
     public Sprite sprite;
 
-    public Item(int itemId, string itemName, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
+    public Item(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, WeaponType weaponType, IItemOwner owner)
     {
         this.itemId = itemId;
         this.itemName = itemName;
@@ -308,12 +337,12 @@ public class Item
         this.weaponType = weaponType;
 
         this.owner = owner;
-        sprite = ResourceManager.instance.GetSprite(itemId);
+        sprite = ResourceManager.instance.GetSprite(className, textureId, spriteId);
     }
 
 
     public Item(ItemInfo info, IItemOwner owner) : this
-        (info.itemId, info.itemName, info.spec, info.consumeWhenUsed, info.isEffectPermanent, info.effectDuration, info.weaponType, owner)
+        (info.itemId, info.itemName, info.className, info.textureId, info.spriteId, info.spec, info.consumeWhenUsed, info.isEffectPermanent, info.effectDuration, info.weaponType, owner)
     {
 
     }

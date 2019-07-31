@@ -26,6 +26,18 @@ public class Inventory
     private int backpackSize;
     private int equipmentSize;
 
+    private int headSlot = 0;
+    private int neckSlot = 1;
+    private int shoulderSlot = 2;
+    private int chestSlot = 3;
+    private int bracerSlot = 4;
+
+    private int glovesSlot = 5;
+    private int beltSlot = 6;
+    private int pantSlot = 7;
+    private int bootSlot = 8;
+    private int trinketSlot = 9;
+
     private int weaponLeftSlot = 10;
     private int weaponRightSlot = 11;
 
@@ -272,35 +284,65 @@ public class Inventory
 
             if(equipment != null)
             {
-                Weapon weapon = equipment as Weapon;
+                int[] slots = GetEquipmentSlot(equipment);
 
-                if(slotIdx != WeaponLeftSlot_InternalIdx && slotIdx != WeaponRightSlot_InternalIdx)
+                if(slots == null || slots.Length == 0)
                 {
-                    if(weapon == null)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-                else
+
+                for(int i = 0; i < slots.Length; i++)
                 {
-                    if(weapon == null)
-                    {
-                        return false;
-                    }
-                    else
+                    if(slots[i] == slotIndexOfType)
                     {
                         return true;
                     }
                 }
+
+                return false;
             }
             else
             {
                 return false;
             }
+        }
+    }
+
+    public int[] GetEquipmentSlot(Equipment equipment)
+    {
+        Weapon weapon = equipment as Weapon;
+        if(weapon != null)
+        {
+            return new int[] { weaponLeftSlot, weaponRightSlot };
+        }
+
+        Amulet amulet = equipment as Amulet;
+        if (amulet != null)
+        {
+            return new int[] { neckSlot };
+        }
+
+        Belt Belt = equipment as Belt;
+        if (Belt != null)
+        {
+            return new int[] { beltSlot };
+        }
+
+        return null;
+    }
+
+    public bool IsSlotMatchEquipmentType(int slotIdx, int equipmentSlotType)
+    {
+        if(IsEquipmentSlot(slotIdx))
+        {
+            int equipmentSlotIdx;
+            InventorySlotType slotType = GetSlotType(slotIdx, out equipmentSlotIdx);
+
+            return equipmentSlotIdx == equipmentSlotType;
+        }
+        else
+        {
+            return false;
         }
     }
 

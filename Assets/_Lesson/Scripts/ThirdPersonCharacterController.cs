@@ -6,6 +6,11 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, IItemOwner
 {
+    public Transform[] outfits;
+    private int currentOutfitIdx = 0;
+
+    private int outfitIdx = 0;
+
     public const int LEFT = 0;
     public const int RIGHT = 1;
 
@@ -184,11 +189,26 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
         if(isPlayer)
         {
+            transform.position = outfits[currentOutfitIdx].position;
+            transform.rotation = outfits[currentOutfitIdx].rotation;
+
+            for(int i = 0; i < outfits.Length; i++)
+            {
+                outfits[i].localPosition = Vector3.zero;
+                outfits[i].localRotation = Quaternion.identity;
+            }
+
             UpdateCrossHair();
 
             if(Input.GetKeyDown(KeyCode.T))
             {
-                inventory.SwitchItem(0, 1);
+                outfitIdx++;
+                if(outfitIdx > 1)
+                {
+                    outfitIdx = 0;
+                }
+
+                SwitchOutfit(outfitIdx);
             }
 
             if(Input.GetKeyDown(KeyCode.Alpha1))
@@ -556,6 +576,23 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         finalSpec = Spec.Sub(finalSpec, this.extraSpec[idx]);
         this.extraSpec[idx].ClearSpec();
         Debug.Log("临时加成结束，最终属性恢复为：" + this.finalSpec.ToString());
+    }
+
+    public void SwitchOutfit(int idx)
+    {
+        for (int i = 0; i < outfits.Length; i++)
+        {
+            if(i != idx)
+            {
+                outfits[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                outfits[i].gameObject.SetActive(true);
+                character.m_Animator = outfits[i].GetComponent<Animator>();
+                currentOutfitIdx = i;
+            }
+        }
     }
 
     void OnTriggerEnter(Collider collider)

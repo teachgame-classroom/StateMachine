@@ -10,7 +10,7 @@ public class CharacterState : State
     protected ThirdPersonCharacterController controller;
     protected ThirdPersonCharacter character;
     protected Rigidbody body;
-    protected Animator anim;
+    protected Animator anim { get { return character.m_Animator; } }
 
     public CharacterState() : base()
     {
@@ -22,7 +22,6 @@ public class CharacterState : State
         character = stateMachine.character;
         controller = stateMachine.controller;
 
-        anim = character.GetComponent<Animator>();
         body = character.GetComponent<Rigidbody>();
 
         if(!anim)

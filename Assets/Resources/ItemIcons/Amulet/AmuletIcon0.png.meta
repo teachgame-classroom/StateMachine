@@ -1,42 +1,38 @@
 fileFormatVersion: 2
-guid: 00eaa4d0d9ae89f4facdb85214b962f7
+guid: 534707fae2c84504e947d049f6a4097d
 TextureImporter:
   fileIDToRecycleName:
-    21300000: 2DInventory_Elixirs_0
-    21300002: 2DInventory_Elixirs_1
-    21300004: 2DInventory_Elixirs_2
-    21300006: 2DInventory_Elixirs_3
-    21300008: 2DInventory_Elixirs_4
-    21300010: 2DInventory_Elixirs_5
-    21300012: 2DInventory_Elixirs_6
-    21300014: 2DInventory_Elixirs_7
-    21300016: 2DInventory_Elixirs_8
-    21300018: Icon_6_Fury
-    21300020: 2DInventory_Elixirs_10
-    21300022: 2DInventory_Elixirs_11
-    21300024: 2DInventory_Elixirs_12
-    21300026: 2DInventory_Elixirs_13
-    21300028: Icon_4_Health
-    21300030: 2DInventory_Elixirs_15
-    21300032: 2DInventory_Elixirs_16
-    21300034: 2DInventory_Elixirs_17
-    21300036: 2DInventory_Elixirs_18
-    21300038: 2DInventory_Elixirs_19
-    21300040: 2DInventory_Elixirs_20
-    21300042: 2DInventory_Elixirs_21
-    21300044: 2DInventory_Elixirs_22
-    21300046: 2DInventory_Elixirs_23
-    21300048: Icon_5_Mana
-    21300050: 2DInventory_Elixirs_25
-    21300052: 2DInventory_Elixirs_26
-    21300054: 2DInventory_Elixirs_27
-    21300056: 2DInventory_Elixirs_28
-    21300058: 2DInventory_Elixirs_29
-    21300060: 2DInventory_Elixirs_30
-    21300062: 2DInventory_Elixirs_31
-    21300064: 2DInventory_Elixirs_32
-    21300066: 2DInventory_Elixirs_33
-    21300068: 2DInventory_Elixirs_34
+    21300000: AmuletIcon0_0
+    21300002: AmuletIcon0_1
+    21300004: AmuletIcon0_2
+    21300006: AmuletIcon0_3
+    21300008: AmuletIcon0_4
+    21300010: AmuletIcon0_5
+    21300012: AmuletIcon0_6
+    21300014: AmuletIcon0_7
+    21300016: AmuletIcon0_8
+    21300018: AmuletIcon0_9
+    21300020: AmuletIcon0_10
+    21300022: AmuletIcon0_11
+    21300024: AmuletIcon0_12
+    21300026: AmuletIcon0_13
+    21300028: AmuletIcon0_14
+    21300030: AmuletIcon0_15
+    21300032: AmuletIcon0_16
+    21300034: AmuletIcon0_17
+    21300036: AmuletIcon0_18
+    21300038: AmuletIcon0_19
+    21300040: AmuletIcon0_20
+    21300042: AmuletIcon0_21
+    21300044: AmuletIcon0_22
+    21300046: AmuletIcon0_23
+    21300048: AmuletIcon0_24
+    21300050: AmuletIcon0_25
+    21300052: AmuletIcon0_26
+    21300054: AmuletIcon0_27
+    21300056: AmuletIcon0_28
+    21300058: AmuletIcon0_29
+    21300060: AmuletIcon0_30
   externalObjects: {}
   serializedVersion: 9
   mipmaps:
@@ -71,7 +67,7 @@ TextureImporter:
     mipBias: -100
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -116,6 +112,17 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -141,701 +148,621 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_0
+      name: AmuletIcon0_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb79764b840765041a29d68913346b91
+      spriteID: 39d33cb3bab448f4cbb25b07a77338e9
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_1
+      name: AmuletIcon0_1
       rect:
         serializedVersion: 2
         x: 64
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 857485c3b638cca499aa787ca4e610c8
+      spriteID: 4de59ba40181be94f82dda8e00bb4085
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_2
+      name: AmuletIcon0_2
       rect:
         serializedVersion: 2
         x: 128
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b113073a2830c26419de50b24c785ecc
+      spriteID: 6d7e174e391057b41be22660b4eaad8e
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_3
+      name: AmuletIcon0_3
       rect:
         serializedVersion: 2
         x: 192
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 209da35a61ab87b40b3127d22802f23e
+      spriteID: f7367fdd3237f544082a368e15134286
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_4
+      name: AmuletIcon0_4
       rect:
         serializedVersion: 2
         x: 256
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eebb1dff437a72a40bf0f1ebcc7c724d
+      spriteID: b00e5177e3e9def48bc8f9683eef24bf
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_5
+      name: AmuletIcon0_5
       rect:
         serializedVersion: 2
         x: 320
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 63211282cf6aaf8408b39c3e83c5e5e5
+      spriteID: 8b0bba12237c67e4595c8c4d76a65cc0
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_6
+      name: AmuletIcon0_6
       rect:
         serializedVersion: 2
         x: 384
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 31b006f9580b8f6458649b255fe46763
+      spriteID: cc525c366e5daf1419c3fd7125770f0f
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_7
+      name: AmuletIcon0_7
       rect:
         serializedVersion: 2
         x: 448
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c88da58fe9d865644a3d447c19ab9d91
+      spriteID: eee61ca80c17b0f41884ab2c6c07bdc1
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_8
+      name: AmuletIcon0_8
       rect:
         serializedVersion: 2
         x: 512
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 098d1e646055e534e9c58131f8fbf423
+      spriteID: b28784fbaab31af4487a29b2c76144da
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icon_6_Fury
+      name: AmuletIcon0_9
       rect:
         serializedVersion: 2
         x: 576
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 456010b178dfc4243afad61936ea173d
+      spriteID: 76115d79d6100b4439d3ca4428e1af17
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_10
+      name: AmuletIcon0_10
       rect:
         serializedVersion: 2
         x: 640
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5debc464bc7bd7849acd681c450bc2f1
+      spriteID: cb27ef2057465ca469fb558c0376d625
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_11
+      name: AmuletIcon0_11
       rect:
         serializedVersion: 2
         x: 704
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cbf3b802c94cba64da227510f23fdaed
+      spriteID: e4319e8d50889c24195ff31cbaa0a7cd
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_12
+      name: AmuletIcon0_12
       rect:
         serializedVersion: 2
         x: 768
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ce8a5286b1002043ad54fd396a771fa
+      spriteID: fcf87e641109b8c46871d3264d6a39b2
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_13
+      name: AmuletIcon0_13
       rect:
         serializedVersion: 2
         x: 832
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8df64203f67779b48876215b306cd570
+      spriteID: 85b972ec02228a84ca39660ed029f7c9
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icon_4_Health
+      name: AmuletIcon0_14
       rect:
         serializedVersion: 2
         x: 896
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dc22cbcc8df62264d9065eed286ce7ed
+      spriteID: ae2d06c1e58a6eb4cae33c6af9b9deeb
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_15
+      name: AmuletIcon0_15
       rect:
         serializedVersion: 2
         x: 960
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4edb7fdccb4f66f4dab74ee4d52f1329
+      spriteID: 8d7c2dcfd6ba3684fa93eaeb02128cd4
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_16
+      name: AmuletIcon0_16
       rect:
         serializedVersion: 2
         x: 1024
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cfa47d0bc8a463043abb8fcfdbc9bf01
+      spriteID: a7b509e2f7d7b0a4fa2978defd594ab4
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_17
+      name: AmuletIcon0_17
       rect:
         serializedVersion: 2
         x: 1088
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 65195cf221554684e9cbcfcb080cf1d8
+      spriteID: d1a44fcaafa728145b6291c4c22b0f29
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_18
+      name: AmuletIcon0_18
       rect:
         serializedVersion: 2
         x: 1152
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17d4b4a32c1f29745b82159e6431af75
+      spriteID: ec9372b9133937247a3aa52e303284ae
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_19
+      name: AmuletIcon0_19
       rect:
         serializedVersion: 2
         x: 1216
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef1f4ebba1a09ce499c4d4a2e1d2ec89
+      spriteID: 5e98ccf5bf009ba479d49e93b662a2d9
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_20
+      name: AmuletIcon0_20
       rect:
         serializedVersion: 2
         x: 1280
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d63a79eff213f494cbc74f6699a1b3e5
+      spriteID: fbf7dedad8757454dbc2ca605b6fb30e
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_21
+      name: AmuletIcon0_21
       rect:
         serializedVersion: 2
         x: 1344
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dff9036595d0fc545abb406a9d7be889
+      spriteID: d44e741f41576624ea3c8a94092ac0f5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_22
+      name: AmuletIcon0_22
       rect:
         serializedVersion: 2
         x: 1408
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15cc0804c0b4e7f499b231a8039f1530
+      spriteID: 4783ce08b0e68854499007f5edc71dd1
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_23
+      name: AmuletIcon0_23
       rect:
         serializedVersion: 2
         x: 1472
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 843425e93088a184abd4babebeaebe64
+      spriteID: 4dbaf7a8d8bf47141be93c3a3baec3cc
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icon_5_Mana
+      name: AmuletIcon0_24
       rect:
         serializedVersion: 2
         x: 1536
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2edb38bc420f4c648ab10fef87935e38
+      spriteID: 8f0e2277cfa484343be91b1710d935d3
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_25
+      name: AmuletIcon0_25
       rect:
         serializedVersion: 2
         x: 1600
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cb5d0fc14cc88d040ae9cd3e5b5ec6db
+      spriteID: bb5ac9d357656eb4bb889f98a1763378
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_26
+      name: AmuletIcon0_26
       rect:
         serializedVersion: 2
         x: 1664
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c1f482727e84ab847b59c8f42618fa1d
+      spriteID: 0a29799af0fefd44a800dc697a43ce86
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_27
+      name: AmuletIcon0_27
       rect:
         serializedVersion: 2
         x: 1728
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ce4a4c230628543439c58f3d1a84d620
+      spriteID: c92fff31841c1e04185f597256952715
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_28
+      name: AmuletIcon0_28
       rect:
         serializedVersion: 2
         x: 1792
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fbb75a5b262a958409d9c068b0a10d87
+      spriteID: 42e15747b10f8fe4da50ad9e7cb836cd
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_29
+      name: AmuletIcon0_29
       rect:
         serializedVersion: 2
         x: 1856
-        y: 64
+        y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4fb473e3f606cdc479822f2a1fc8ea42
+      spriteID: d61f03c665f2fc3469a1f68f774ee23a
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2DInventory_Elixirs_30
+      name: AmuletIcon0_30
       rect:
         serializedVersion: 2
         x: 1920
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4632f5a9640c50544895362d097c0d0f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 2DInventory_Elixirs_31
-      rect:
-        serializedVersion: 2
-        x: 1984
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 922270824077e4148ba78beabc35e371
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 2DInventory_Elixirs_32
-      rect:
-        serializedVersion: 2
-        x: 0
         y: 0
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5fadbe1871faed2479e6a0d1407eb65c
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 2DInventory_Elixirs_33
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2e160f99e19ff294d861d87a10a9f3a4
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 2DInventory_Elixirs_34
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3fcf188ebb192a64e9caa5b8ea8e25b0
+      spriteID: 18863d4b32e78fe42b751ffb8ed18943
       vertices: []
       indices: 
       edges: []
@@ -843,7 +770,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 152a2593b57ef5a46bc2f427ca04ad2f
+    spriteID: 998608db736519744a6be7549eec3d38
     vertices: []
     indices: 
     edges: []

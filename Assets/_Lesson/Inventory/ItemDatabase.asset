@@ -16,6 +16,8 @@ MonoBehaviour:
   - itemName: GunAxe
     itemId: 1
     className: GunAxe
+    textureId: 0
+    spriteId: 0
     consumeWhenUsed: 0
     isEffectPermanent: 0
     effectDuration: 0
@@ -33,6 +35,8 @@ MonoBehaviour:
   - itemName: Axe
     itemId: 2
     className: Axe
+    textureId: 0
+    spriteId: 0
     consumeWhenUsed: 0
     isEffectPermanent: 0
     effectDuration: 0
@@ -50,6 +54,8 @@ MonoBehaviour:
   - itemName: Gun
     itemId: 3
     className: Gun
+    textureId: 0
+    spriteId: 0
     consumeWhenUsed: 0
     isEffectPermanent: 0
     effectDuration: 0
@@ -67,6 +73,8 @@ MonoBehaviour:
   - itemName: Health
     itemId: 4
     className: Potion
+    textureId: 0
+    spriteId: 14
     consumeWhenUsed: 1
     isEffectPermanent: 0
     effectDuration: 5
@@ -81,37 +89,41 @@ MonoBehaviour:
       recoverHp: 100
       recoverMana: 0
       recoverFury: 0
-  - itemName: Mana
+  - itemName: Powerful Amulet
     itemId: 5
-    className: Potion
+    className: Amulet
+    textureId: 0
+    spriteId: 29
     consumeWhenUsed: 0
     isEffectPermanent: 0
     effectDuration: 0
     weaponType: 0
     spec:
-      atk: 0
-      def: 0
+      atk: 50
+      def: 25
       dex: 0
-      hp: 0
-      mana: 0
-      fury: 0
-      recoverHp: 0
-      recoverMana: 100
-      recoverFury: 0
-  - itemName: Fury
-    itemId: 6
-    className: Potion
-    consumeWhenUsed: 0
-    isEffectPermanent: 0
-    effectDuration: 0
-    weaponType: 0
-    spec:
-      atk: 0
-      def: 0
-      dex: 0
-      hp: 0
+      hp: 100
       mana: 0
       fury: 0
       recoverHp: 0
       recoverMana: 0
-      recoverFury: 100
+      recoverFury: 0
+  - itemName: Fury Belt
+    itemId: 6
+    className: Belt
+    textureId: 0
+    spriteId: 22
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
+    weaponType: 0
+    spec:
+      atk: 0
+      def: 0
+      dex: 0
+      hp: 0
+      mana: 0
+      fury: 100
+      recoverHp: 0
+      recoverMana: 0
+      recoverFury: 0
