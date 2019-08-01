@@ -127,3 +127,41 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+  - itemName: Leather Armor
+    itemId: 7
+    className: Armor
+    textureId: 0
+    spriteId: 0
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
+    weaponType: 3
+    spec:
+      atk: 0
+      def: 10
+      dex: 0
+      hp: 0
+      mana: 0
+      fury: 0
+      recoverHp: 0
+      recoverMana: 0
+      recoverFury: 0
+  - itemName: Magic Armor
+    itemId: 8
+    className: Armor
+    textureId: 0
+    spriteId: 33
+    consumeWhenUsed: 0
+    isEffectPermanent: 0
+    effectDuration: 0
+    weaponType: 4
+    spec:
+      atk: 0
+      def: 50
+      dex: 25
+      hp: 100
+      mana: 50
+      fury: 25
+      recoverHp: 0
+      recoverMana: 0
+      recoverFury: 0

@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
     private RectTransform[] backpackSlots;
     private RectTransform[] equipmentSlots;
 
+    private RectTransform[] statInfos = new RectTransform[9];
+
     public delegate void InventorySlotDelegate(InventorySlotType slotType, int slotIdx);
     public event InventorySlotDelegate InventorySlotClickEvent;
     public event InventorySlotDelegate InventorySlotHoverEvent;
@@ -69,6 +71,14 @@ public class UIManager : MonoBehaviour
 
         Debug.Log(backpackSlots.Length);
 
+        StatsMarker[] statsMarkers = characterPanel.GetComponentsInChildren<StatsMarker>();
+
+        for(int i = 0; i < statsMarkers.Length; i++)
+        {
+            int idx = (int)statsMarkers[i].statsType;
+            statInfos[idx] = statsMarkers[i].transform as RectTransform;
+        }
+
         SetItemHover(InventorySlotType.Backpack,-1);
         SetItemHover(InventorySlotType.Equipment, -1);
 
@@ -96,6 +106,13 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+    }
+
+    public void SetStats(StatsType statsType, float stat)
+    {
+        RectTransform rect = statInfos[(int)statsType];
+
+        rect.Find("Value Text").GetComponent<Text>().text = stat.ToString();
     }
 
     public void ShowCrosshair(Vector3 worldPos)
@@ -224,14 +241,17 @@ public class UIManager : MonoBehaviour
 
         dragIcon.GetComponent<Image>().sprite = slots[slotIdx].Find("Icon").GetComponent<Image>().sprite;
 
-        string text = slots[slotIdx].Find("Number").GetComponent<Text>().text;
-        dragIcon.GetComponentInChildren<Text>().text = text;
+        Transform numberTrans = slots[slotIdx].Find("Number");
+
+        if(numberTrans)
+        {
+            string text = numberTrans.GetComponent<Text>().text;
+            dragIcon.GetComponentInChildren<Text>().text = text;
+            numberTrans.gameObject.SetActive(false);
+        }
 
         dragIcon.anchoredPosition = ScreenToCanvasPoint(Input.mousePosition, screenRatio);
-
         slots[slotIdx].Find("Icon").gameObject.SetActive(false);
-
-        slots[slotIdx].Find("Number").gameObject.SetActive(false);
     }
 
     public void OnSlotDrag(InventorySlotType slotType, int slotIdx)

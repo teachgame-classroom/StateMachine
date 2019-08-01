@@ -19,10 +19,14 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     protected ThirdPersonCharacter character;
 
     public Spec baseSpec;
-    public List<Spec> extraSpec = new List<Spec>();
+    private Spec equipmentTotalSpec;
+
+    public Spec extraSpec = new Spec();
     public Spec finalSpec;
 
-    List<Equipment> equipments = new List<Equipment>();
+    public const int EQUIPMENT_SLOT_COUNT = 12;
+
+    Equipment[] equipments = new Equipment[EQUIPMENT_SLOT_COUNT];
 
     public int currentHp { get; private set; }
 
@@ -123,22 +127,22 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
                     weaponLocation_R[1] = slotTrans;
                     break;
                 case SlotType.LeftGunAxe:
-                    weapons[(int)WeaponType.GunAxe * 2] = slotTrans;
+                    weapons[(int)EquipmentType.GunAxe * 2] = slotTrans;
                     break;
                 case SlotType.RightGunAxe:
-                    weapons[(int)WeaponType.GunAxe * 2 + 1] = slotTrans;
+                    weapons[(int)EquipmentType.GunAxe * 2 + 1] = slotTrans;
                     break;
                 case SlotType.LeftAxe:
-                    weapons[(int)WeaponType.Axe * 2] = slotTrans;
+                    weapons[(int)EquipmentType.Axe * 2] = slotTrans;
                     break;
                 case SlotType.RightAxe:
-                    weapons[(int)WeaponType.Axe * 2 + 1] = slotTrans;
+                    weapons[(int)EquipmentType.Axe * 2 + 1] = slotTrans;
                     break;
                 case SlotType.LeftGun:
-                    weapons[(int)WeaponType.Gun * 2] = slotTrans;
+                    weapons[(int)EquipmentType.Gun * 2] = slotTrans;
                     break;
                 case SlotType.RightGun:
-                    weapons[(int)WeaponType.Gun * 2 + 1] = slotTrans;
+                    weapons[(int)EquipmentType.Gun * 2 + 1] = slotTrans;
                     break;
                 case SlotType.LeftShotPos:
                     weaponShotPos[LEFT] = slotTrans;
@@ -173,7 +177,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             UIManager.instance.InventoryDropEmptyEvent += inventory.OnInventoryEmptyDrop;
             inventory.InventoryChangeEvent += UIManager.instance.OnInventoryChange;
             inventory.InventoryHasItemEvent += UIManager.instance.OnHasItemNotify;
-
+            inventory.EquipmentSpecChangeEvent += OnEquipmentChange;
         }
     }
 
@@ -213,15 +217,15 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
             if(Input.GetKeyDown(KeyCode.Alpha1))
             {
-                EquipWeapon(WeaponType.GunAxe);
+                EquipWeapon(EquipmentType.GunAxe);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                EquipWeapon(WeaponType.Axe);
+                EquipWeapon(EquipmentType.Axe);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                EquipWeapon(WeaponType.Gun);
+                EquipWeapon(EquipmentType.Gun);
             }
         }
 
@@ -473,45 +477,55 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         return true;
     }
 
-    public void CaculatFinalSpec()
+    public void CaculateFinalSpec()
     {
-        Spec spec = baseSpec;
-
-        for(int i = 0; i < equipments.Count; i++)
-        {
-            spec = Spec.Add(spec, equipments[i].spec);
-        }
-
-        finalSpec = spec;
+        Spec base_equipment = Spec.Add(baseSpec, equipmentTotalSpec);
+        finalSpec = Spec.Add(base_equipment, extraSpec);
         Debug.Log("Final Spec:" + finalSpec.ToString());
+        UpdateStatsUI();
     }
+
+    void UpdateStatsUI()
+    {
+        for (int i = 0; i < Spec.SPEC_COUNT; i++)
+        {
+            UIManager.instance.SetStats((StatsType)i, finalSpec[i]);
+        }
+    }
+
 
     public bool Equip(Equipment equipment)
     {
+        int[] equipmentSlot = inventory.GetEquipmentSlot(equipment);
+
         Weapon weapon = equipment as Weapon;
 
         if(weapon != null)
         {
-            for(int i = 0; i < equipments.Count; i++)
-            {
-                Weapon equipedWeapon = equipments[i] as Weapon;
-                if (equipedWeapon != null)
-                {
-                    equipments.RemoveAt(i);
-                }
-            }
-            EquipWeapon(weapon.weaponType);
+            EquipWeapon(weapon.equipmentType);
         }
 
-        equipments.Add(equipment);
+        Armor armor = equipment as Armor;
 
-        CaculatFinalSpec();
+        if(armor != null)
+        {
+            int outfitIdx = GetOutfitIndex(armor.equipmentType);
 
-
+            if(outfitIdx >= 0)
+            {
+                SwitchOutfit(outfitIdx);
+            }
+        }
         return true;
     }
 
-    public void EquipWeapon(WeaponType weaponType)
+    void OnEquipmentChange(Spec equipmentTotalSpec)
+    {
+        this.equipmentTotalSpec = equipmentTotalSpec;
+        CaculateFinalSpec();
+    }
+
+    public void EquipWeapon(EquipmentType weaponType)
     {
         if (currentWeapons[0]) currentWeapons[0].gameObject.SetActive(false);
         if (currentWeapons[1]) currentWeapons[1].gameObject.SetActive(false);
@@ -540,6 +554,21 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         }
     }
 
+    int GetOutfitIndex(EquipmentType equipment)
+    {
+        if(equipment == EquipmentType.LeatherArmor)
+        {
+            return 1;
+        }
+
+        if(equipment == EquipmentType.MagicArmor)
+        {
+            return 0;
+        }
+
+        return -1;
+    }
+
     public void Hurt(int damage)
     {
         if (isAlive)
@@ -555,13 +584,12 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
     {
         if(isPermernate == false)
         {
-            int idx = this.extraSpec.Count;
-            this.extraSpec.Add(Spec.Clone(extraSpec));
+            this.extraSpec = Spec.Add(this.extraSpec, extraSpec);
 
             Debug.Log("得到临时属性加成：" + this.extraSpec.ToString() + "，持续时间：" + duration);
-            finalSpec = Spec.Add(finalSpec, this.extraSpec[idx]);
+            CaculateFinalSpec();
             Debug.Log("最终属性临时变为：" + this.finalSpec.ToString());
-            StartCoroutine(CleanExtraSpec(duration, idx));
+            StartCoroutine(CleanExtraSpec(duration, extraSpec));
         }
         else
         {
@@ -570,11 +598,11 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         }
     }
 
-    IEnumerator CleanExtraSpec(float delay, int idx)
+    IEnumerator CleanExtraSpec(float delay, Spec extraSpec)
     {
         yield return new WaitForSeconds(delay);
-        finalSpec = Spec.Sub(finalSpec, this.extraSpec[idx]);
-        this.extraSpec[idx].ClearSpec();
+        this.extraSpec = Spec.Sub(this.extraSpec, extraSpec);
+        CaculateFinalSpec();
         Debug.Log("临时加成结束，最终属性恢复为：" + this.finalSpec.ToString());
     }
 

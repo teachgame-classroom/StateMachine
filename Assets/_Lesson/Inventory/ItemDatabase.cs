@@ -13,7 +13,7 @@ public class ItemInfo
     public bool consumeWhenUsed;
     public bool isEffectPermanent;
     public float effectDuration;
-    public WeaponType weaponType;
+    public EquipmentType weaponType;
     public Spec spec;
 }
 

@@ -21,6 +21,9 @@ public class Inventory
     public delegate void InventorySlotDelegate(InventorySlotType slotType, int gridIdx);
     public event InventorySlotDelegate InventoryHasItemEvent;
 
+    public delegate void EquipmentSpecChangeDelegate(Spec equipmentTotalSpec);
+    public event EquipmentSpecChangeDelegate EquipmentSpecChangeEvent;
+
     private InventoryGrid[] grids;
 
     private int backpackSize;
@@ -29,7 +32,7 @@ public class Inventory
     private int headSlot = 0;
     private int neckSlot = 1;
     private int shoulderSlot = 2;
-    private int chestSlot = 3;
+    private int armorSlot = 3;
     private int bracerSlot = 4;
 
     private int glovesSlot = 5;
@@ -308,6 +311,26 @@ public class Inventory
         }
     }
 
+    public Spec CaculateTotalEquipmentSpec()
+    {
+        Spec totalSpec = new Spec();
+
+        for(int i = backpackSize; i < backpackSize + equipmentSize; i++)
+        {
+            if(grids[i].item != null)
+            {
+                Equipment equipment = grids[i].item as Equipment;
+
+                if(equipment != null)
+                {
+                    totalSpec = Spec.Add(totalSpec, equipment.spec);
+                }
+            }
+        }
+
+        return totalSpec;
+    }
+
     public int[] GetEquipmentSlot(Equipment equipment)
     {
         Weapon weapon = equipment as Weapon;
@@ -326,6 +349,12 @@ public class Inventory
         if (Belt != null)
         {
             return new int[] { beltSlot };
+        }
+
+        Armor armor = equipment as Armor;
+        if(armor != null)
+        {
+            return new int[] { armorSlot };
         }
 
         return null;
@@ -368,6 +397,12 @@ public class Inventory
         if(grid_b.item != null)
         {
             grid_b.item.grid = grid_b;
+        }
+
+        if(IsEquipmentSlot(idx_a) || IsEquipmentSlot(idx_b))
+        {
+            Spec spec = CaculateTotalEquipmentSpec();
+            EquipmentSpecChangeEvent(spec);
         }
 
         Refresh();
