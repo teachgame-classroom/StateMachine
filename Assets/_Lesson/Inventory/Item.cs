@@ -2,6 +2,103 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum RarityType { Normal, Blue, Yellow, Purple, Orange }
+
+public class Rarity
+{
+    public static float normalDrop = 0.5f;
+    public static float blueDrop =  0.75f;
+    public static float yelloDrop = 0.9f;
+    public static float purpleDrop = 0.975f;
+
+    public static RarityType GetRandomRarity()
+    {
+        float rnd = Random.Range(0, 1f);
+
+        Debug.LogWarning("Random:" + rnd);
+
+        if(rnd < normalDrop)
+        {
+            return RarityType.Normal;
+        }
+        else if(rnd < blueDrop)
+        {
+            return RarityType.Blue;
+        }
+        else if(rnd < yelloDrop)
+        {
+            return RarityType.Yellow;
+        }
+        else if(rnd < purpleDrop)
+        {
+            return RarityType.Purple;
+        }
+        else
+        {
+            return RarityType.Orange;
+        }
+    }
+
+    public static Spec GetFinalSpecByRarity(Spec baseSpec, RarityType rarityType)
+    {
+        Spec extraSpec = GetExtraSpecByRarity(baseSpec, rarityType);
+
+        Spec finalSpec = Spec.Add(baseSpec, extraSpec);
+
+        return finalSpec;
+    }
+
+    public static Spec GetExtraSpecByRarity(Spec baseSpec, RarityType rarityType)
+    {
+        Spec extraSpec = new Spec();
+
+        for(int i = 0; i < Spec.SPEC_COUNT; i++)
+        {
+            extraSpec[i] = baseSpec[i] * GetRandomFactorByRarity(rarityType);
+        }
+
+        return extraSpec;
+    }
+
+    public static float GetRandomFactorByRarity(RarityType rarityType)
+    {
+        switch (rarityType)
+        {
+            case RarityType.Normal:
+                return 0;
+            case RarityType.Blue:
+                return Random.Range(0, 0.1f);
+            case RarityType.Yellow:
+                return Random.Range(0.08f, 0.3f);
+            case RarityType.Purple:
+                return Random.Range(0.25f, 0.45f);
+            case RarityType.Orange:
+                return Random.Range(0.5f, 0.75f);
+            default:
+                return 0;
+        }
+    }
+
+    public static Color GetColorByRarity(RarityType rarityType)
+    {
+        switch (rarityType)
+        {
+            case RarityType.Normal:
+                return Color.black;
+            case RarityType.Blue:
+                return Color.blue;
+            case RarityType.Yellow:
+                return Color.yellow;
+            case RarityType.Purple:
+                return new Color(0.5f, 0, 1, 1);
+            case RarityType.Orange:
+                return new Color(1f, 0.5f, 0, 1);
+            default:
+                return Color.black;
+        }
+    }
+}
+
 [System.Serializable]
 public class Spec
 {
@@ -82,7 +179,6 @@ public class Spec
                 default:
                     throw new System.ArgumentOutOfRangeException();
             }
-
         }
     }
 
@@ -182,23 +278,11 @@ public class Axe : Weapon
     {
 
     }
-
-    public Axe(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
-    {
-
-    }
 }
 
 public class Gun : Weapon
 {
     public Gun(ItemInfo info, IItemOwner owner) : base(info, owner)
-    {
-
-    }
-
-    public Gun(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -211,12 +295,6 @@ public class GunAxe : Weapon
     {
 
     }
-
-    public GunAxe(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
-    {
-
-    }
 }
 
 public class Weapon : Equipment
@@ -226,23 +304,11 @@ public class Weapon : Equipment
     {
 
     }
-
-    public Weapon(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
-    {
-
-    }
 }
 
 public class Equipment : Item
 {
     public Equipment(ItemInfo info, IItemOwner owner) : base(info, owner)
-    {
-
-    }
-
-    public Equipment(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -267,12 +333,6 @@ public class Armor : Equipment
     {
 
     }
-
-    public Armor(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
-    {
-
-    }
 }
 
 
@@ -282,23 +342,11 @@ public class Amulet : Equipment
     {
 
     }
-
-    public Amulet(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
-    {
-
-    }
 }
 
 public class Belt : Equipment
 {
     public Belt(ItemInfo info, IItemOwner owner) : base(info, owner)
-    {
-
-    }
-
-    public Belt(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
     {
 
     }
@@ -311,13 +359,6 @@ public class Potion : Item
     {
 
     }
-
-    public Potion(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
-        : base(itemId, itemName, className, textureId, spriteId, spec, consumeWhenUsed, isEffectPermernate, effectDuration, weaponType, owner)
-    {
-
-    }
-
 
     public override void Use()
     {
@@ -332,6 +373,9 @@ public class Item
     public string itemName;
     public Spec spec;
 
+    public RarityType rarity;
+
+    public bool canStack;
     public bool consumeWhenUsed;
     public bool isEffectPermanent;
     public float effectDuration;
@@ -339,27 +383,35 @@ public class Item
 
     public InventoryGrid grid;
     public IItemOwner owner;
-    public Sprite sprite;
+    public Sprite sprite;    
 
-    public Item(int itemId, string itemName, string className, int textureId, int spriteId, Spec spec, bool consumeWhenUsed, bool isEffectPermernate, float effectDuration, EquipmentType weaponType, IItemOwner owner)
+    public Item(ItemInfo info, IItemOwner owner)
     {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.spec = Spec.Clone(spec);
-        this.consumeWhenUsed = consumeWhenUsed;
-        this.isEffectPermanent = isEffectPermernate;
-        this.effectDuration = effectDuration;
-        this.equipmentType = weaponType;
+        this.itemId = info.itemId;
+        this.itemName = info.itemName;
+
+        this.canStack = info.canStack;
+
+        if(this.canStack)
+        {
+            this.rarity = RarityType.Normal;
+        }
+        else
+        {
+            this.rarity = Rarity.GetRandomRarity();
+        }
+
+        this.spec = Rarity.GetFinalSpecByRarity(info.spec, this.rarity);
+
+        this.consumeWhenUsed = info.consumeWhenUsed;
+        this.isEffectPermanent = info.isEffectPermanent;
+        this.effectDuration = info.effectDuration;
+        this.equipmentType = info.weaponType;
 
         this.owner = owner;
-        sprite = ResourceManager.instance.GetSprite(className, textureId, spriteId);
-    }
+        sprite = ResourceManager.instance.GetSprite(info.className, info.textureId, info.spriteId);
 
-
-    public Item(ItemInfo info, IItemOwner owner) : this
-        (info.itemId, info.itemName, info.className, info.textureId, info.spriteId, info.spec, info.consumeWhenUsed, info.isEffectPermanent, info.effectDuration, info.weaponType, owner)
-    {
-
+        Debug.Log("生成了稀有度为" + this.rarity + "的" + this.itemName + ",Spec:" + this.spec.ToString());
     }
 
     public override string ToString()

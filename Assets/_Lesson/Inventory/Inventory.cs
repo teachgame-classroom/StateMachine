@@ -15,7 +15,7 @@ public class Inventory
     public int gridOnDrag = -1;
     public int gridOnDrop = -1;
 
-    public delegate void InventoryChangeDelegate(InventorySlotType slotType, int gridIdx, int itemCount, Sprite sprite);
+    public delegate void InventoryChangeDelegate(InventorySlotType slotType, int gridIdx, int itemCount, Sprite sprite, RarityType rarityType);
     public event InventoryChangeDelegate InventoryChangeEvent;
 
     public delegate void InventorySlotDelegate(InventorySlotType slotType, int gridIdx);
@@ -109,11 +109,11 @@ public class Inventory
 
             if(grids[i].item != null)
             {
-                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[i].itemCount, grids[i].item.sprite);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[i].itemCount, grids[i].item.sprite, grids[i].item.rarity);
             }
             else
             {
-                InventoryChangeEvent(inventorySlotType, slotIndexOfType, 0, null);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, 0, null, RarityType.Normal);
             }
         }
     }
@@ -133,17 +133,25 @@ public class Inventory
 
         for (int i = 0; i < grids.Length; i++)
         {
-            // 查找背包里面存放有同类物品的格子，增加其存放数量
-            if (grids[i].item != null && grids[i].item.itemName == item.itemName)
+            // 如果物品可以重复堆放
+            if(item.canStack)
             {
-                grids[i].itemCount += itemCount;
-                Debug.Log("将" + itemCount + "个" + item.itemName + "放入了第" + i + "格，总数增加为" + grids[i].itemCount + "个");
-                putInGridIdx = i;
-                result = true;
+                // 查找背包里面存放有同类物品的格子，增加其存放数量
+                if (grids[i].item != null && grids[i].item.itemName == item.itemName)
+                {
+                    grids[i].itemCount += itemCount;
+                    Debug.Log("将" + itemCount + "个" + item.itemName + "放入了第" + i + "格，总数增加为" + grids[i].itemCount + "个");
+                    putInGridIdx = i;
+                    result = true;
+                }
+            }
+            else
+            {
+                itemCount = 1;
             }
 
             // 查找第一个没有存放物品的格子，当背包中还没有存放同类物品时，就把物品放到第一个空格子
-            if(emptyGridIdx == -1)
+            if (emptyGridIdx == -1)
             {
                 if (grids[i].itemCount == 0 || grids[i].item == null)
                 {
@@ -170,7 +178,7 @@ public class Inventory
                 int slotIndexOfType;
                 InventorySlotType inventorySlotType = GetSlotType(putInGridIdx, out slotIndexOfType);
 
-                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite, grids[putInGridIdx].item.rarity);
             }
         }
         else
@@ -420,6 +428,7 @@ public class Inventory
         }
 
         int itemCount = grids[slotIdx].itemCount;
+        RarityType rarityType = grids[slotIdx].item.rarity;
         Sprite sprite = null;
 
         if (grids[slotIdx].item != null)
@@ -429,7 +438,7 @@ public class Inventory
 
         int slotIndexOfType;
         InventorySlotType inventorySlotType = GetSlotType(slotIdx, out slotIndexOfType);
-        InventoryChangeEvent(inventorySlotType, slotIndexOfType, itemCount, sprite);
+        InventoryChangeEvent(inventorySlotType, slotIndexOfType, itemCount, sprite, rarityType);
     }
 
     public void OnInventorySlotHover(InventorySlotType slotType, int slotIdx)

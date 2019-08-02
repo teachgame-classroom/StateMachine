@@ -10,6 +10,7 @@ public class ItemInfo
     public string className;
     public int textureId;
     public int spriteId;
+    public bool canStack;
     public bool consumeWhenUsed;
     public bool isEffectPermanent;
     public float effectDuration;

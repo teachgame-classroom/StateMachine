@@ -85,17 +85,17 @@ public class UIManager : MonoBehaviour
         dragIcon = transform.Find("DragIcon") as RectTransform;
     }
 
-    public void OnInventoryChange(InventorySlotType inventorySlotType, int slotIdx, int itemCount, Sprite sprite)
+    public void OnInventoryChange(InventorySlotType inventorySlotType, int slotIdx, int itemCount, Sprite sprite, RarityType rarityType)
     {
         RectTransform[] slots = GetSlotByInventoryType(inventorySlotType);
 
         if(itemCount > 0)
         {
-            SetItemSlotSprite(slots, slotIdx, sprite);
+            SetItemSlotSprite(slots, slotIdx, sprite, rarityType);
         }
         else
         {
-            SetItemSlotSprite(slots, slotIdx, null);
+            SetItemSlotSprite(slots, slotIdx, null, rarityType);
         }
 
         if (inventorySlotType == InventorySlotType.Backpack)
@@ -149,19 +149,23 @@ public class UIManager : MonoBehaviour
         return characterPanel.gameObject.activeSelf;
     }
 
-    public void SetItemSlotSprite(RectTransform[] slots, int idx, Sprite sprite)
+    public void SetItemSlotSprite(RectTransform[] slots, int idx, Sprite sprite, RarityType rarityType)
     {
         Debug.Log(slots[idx].gameObject.name);
         Image iconImage = slots[idx].Find("Icon").GetComponent<Image>();
         iconImage.sprite = sprite;
 
+        Image bgImage = slots[idx].Find("BG").GetComponent<Image>();
+
         if(iconImage.sprite)
         {
             iconImage.gameObject.SetActive(true);
+            bgImage.color = Rarity.GetColorByRarity(rarityType);
         }
         else
         {
             iconImage.gameObject.SetActive(false);
+            bgImage.color = Rarity.GetColorByRarity(RarityType.Normal);
         }
     }
 
