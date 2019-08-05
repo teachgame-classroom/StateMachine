@@ -173,12 +173,32 @@ public class CharacterState_GroundMovement_NoWeapon : CharacterState
         {
             if(buttonName == InputList.R1)
             {
-                stateMachine.SetState<CharacterState_GroundMovement_Axe>();
+                if(controller.weaponActionType != WeaponActionType.NoWeapon)
+                {
+                    if (controller.weaponActionType == WeaponActionType.Melee || controller.weaponActionType == WeaponActionType.MeleeAndRange)
+                    {
+                        stateMachine.SetState<CharacterState_GroundMovement_Axe>();
+                    }
+                    else
+                    {
+                        stateMachine.SetState<CharacterState_GroundMovement_Gun>();
+                    }
+                }
             }
 
             if (buttonName == InputList.R2)
             {
-                stateMachine.SetState<CharacterState_GroundMovement_Gun>();
+                if(controller.weaponActionType != WeaponActionType.NoWeapon)
+                {
+                    if (controller.weaponActionType == WeaponActionType.Range || controller.weaponActionType == WeaponActionType.MeleeAndRange)
+                    {
+                        stateMachine.SetState<CharacterState_GroundMovement_Gun>();
+                    }
+                    else
+                    {
+                        stateMachine.SetState<CharacterState_GroundMovement_Axe>();
+                    }
+                }
             }
 
             if (buttonName == InputList.FIRE2)

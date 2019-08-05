@@ -176,6 +176,19 @@ public class CharacterState_GroundMovement_Gun : CharacterState
                 stateMachine.SetState<CharacterState_GroundMovement_NoWeapon>();
             }
 
+            if (buttonName == InputList.R2)
+            {
+                Debug.Log("Gun:" + controller.weaponActionType);
+                if (controller.weaponActionType == WeaponActionType.Melee || controller.weaponActionType == WeaponActionType.MeleeAndRange)
+                {
+                    stateMachine.SetState<CharacterState_GroundMovement_Axe>();
+                }
+                else
+                {
+                    stateMachine.SetState<CharacterState_GroundMovement_NoWeapon>();
+                }
+            }
+
             if (buttonName == InputList.FIRE1)
             {
                 stateMachine.SetState<CharaacterState_GunAttack00>();

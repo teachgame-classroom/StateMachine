@@ -6,6 +6,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, IItemOwner
 {
+    public WeaponActionType weaponActionType;
+    private EquipmentType[] weaponTypes = new EquipmentType[2];
+
     public Transform[] outfits;
     private int currentOutfitIdx = 0;
 
@@ -76,14 +79,14 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         set;
     }
 
-    protected Transform[] currentWeapons = new Transform[2];
+    public Transform[] currentWeapons = new Transform[2];
 
-    protected Transform[] weapons = new Transform[6];
+    public Transform[] weapons = new Transform[6];
 
-    protected Transform[] weaponLocation_L = new Transform[2];
-    protected Transform[] weaponLocation_R = new Transform[2];
+    public Transform[] weaponLocation_L = new Transform[2];
+    public Transform[] weaponLocation_R = new Transform[2];
 
-    protected Transform[] weaponShotPos = new Transform[2];
+    public Transform[] weaponShotPos = new Transform[2];
 
     public AudioClip fireClip;
 
@@ -217,15 +220,15 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
             if(Input.GetKeyDown(KeyCode.Alpha1))
             {
-                EquipWeapon(EquipmentType.GunAxe);
+                EquipWeapon(EquipmentType.GunAxe, LEFT);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                EquipWeapon(EquipmentType.Axe);
+                EquipWeapon(EquipmentType.Axe, RIGHT);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                EquipWeapon(EquipmentType.Gun);
+                EquipWeapon(EquipmentType.Gun, LEFT);
             }
         }
 
@@ -254,13 +257,16 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
     public void AttachWeapon(int weaponPosIdx)
     {
-        currentWeapons[LEFT].SetParent(weaponLocation_L[weaponPosIdx]);
-        currentWeapons[RIGHT].SetParent(weaponLocation_R[weaponPosIdx]);
+        if (currentWeapons[LEFT]) currentWeapons[LEFT].SetParent(weaponLocation_L[weaponPosIdx]);
+        if (currentWeapons[RIGHT]) currentWeapons[RIGHT].SetParent(weaponLocation_R[weaponPosIdx]);
 
         foreach (Transform trans in currentWeapons)
         {
-            trans.localPosition = Vector3.zero;
-            trans.localRotation = Quaternion.identity;
+            if(trans)
+            {
+                trans.localPosition = Vector3.zero;
+                trans.localRotation = Quaternion.identity;
+            }
         }
     }
 
@@ -502,7 +508,8 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
         if(weapon != null)
         {
-            EquipWeapon(weapon.equipmentType);
+            int hand = inventory.GetWeaponHand(weapon.equipmentSlotIdx);
+            EquipWeapon(weapon.equipmentType,hand);
         }
 
         Armor armor = equipment as Armor;
@@ -519,38 +526,93 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         return true;
     }
 
+    public bool UnEquip(int equipmentSlotIdx)
+    {
+        int hand = inventory.GetWeaponHand(equipmentSlotIdx);
+
+        if(hand != -1)
+        {
+            EquipWeapon(EquipmentType.None, hand);
+        }
+
+        return true;
+    }
+
+
     void OnEquipmentChange(Spec equipmentTotalSpec)
     {
         this.equipmentTotalSpec = equipmentTotalSpec;
         CaculateFinalSpec();
     }
 
-    public void EquipWeapon(EquipmentType weaponType)
+    public void EquipWeapon(EquipmentType weaponType, int hand)
     {
-        if (currentWeapons[0]) currentWeapons[0].gameObject.SetActive(false);
-        if (currentWeapons[1]) currentWeapons[1].gameObject.SetActive(false);
-
         int weaponStartIdx = (int)weaponType * 2;
-        currentWeapons[0] = weapons[weaponStartIdx];
-        currentWeapons[1] = weapons[weaponStartIdx + 1];
 
-        currentWeapons[0].gameObject.SetActive(true);
-        currentWeapons[1].gameObject.SetActive(true);
-
-        foreach(SlotMarker marker in currentWeapons[0].GetComponentsInChildren<SlotMarker>())
+        if (hand == LEFT || hand == RIGHT)
         {
-            if(marker.slotType == SlotType.LeftShotPos)
+            if (currentWeapons[hand]) currentWeapons[hand].gameObject.SetActive(false);
+
+            if(weaponType == EquipmentType.None)
             {
-                weaponShotPos[0] = marker.transform;
+                currentWeapons[hand] = null;
+                return;
+            }
+
+            currentWeapons[hand] = weapons[weaponStartIdx + hand];
+            currentWeapons[hand].gameObject.SetActive(true);
+
+            foreach (SlotMarker marker in currentWeapons[hand].GetComponentsInChildren<SlotMarker>())
+            {
+                if (hand == LEFT && marker.slotType == SlotType.LeftShotPos)
+                {
+                    weaponShotPos[hand] = marker.transform;
+                }
+
+                if (hand == RIGHT && marker.slotType == SlotType.RightShotPos)
+                {
+                    weaponShotPos[hand] = marker.transform;
+                }
+            }
+
+            weaponTypes[hand] = weaponType;
+            weaponActionType = UpdateWeaponActionType(weaponTypes);
+            Debug.Log("WeaponActionType:" + weaponActionType);
+        }
+    }
+
+    WeaponActionType UpdateWeaponActionType(EquipmentType[] equipmentTypes)
+    {
+        bool hasAxe = false;
+        bool hasWeapon = false;
+
+        foreach(EquipmentType type in equipmentTypes)
+        {
+            if(type != EquipmentType.None)
+            {
+                hasWeapon = true;
+            }
+
+            if(type == EquipmentType.Axe)
+            {
+                hasAxe = true;
             }
         }
 
-        foreach (SlotMarker marker in currentWeapons[1].GetComponentsInChildren<SlotMarker>())
+        if(hasWeapon)
         {
-            if (marker.slotType == SlotType.RightShotPos)
+            if(hasAxe)
             {
-                weaponShotPos[1] = marker.transform;
+                return WeaponActionType.Melee;
             }
+            else
+            {
+                return WeaponActionType.MeleeAndRange;
+            }
+        }
+        else
+        {
+            return WeaponActionType.NoWeapon;
         }
     }
 

@@ -4,8 +4,27 @@ using UnityEngine;
 
 public class InventoryGrid
 {
+    public int slotIdx;
     public Item item;
     public int itemCount;
+
+    public Inventory inventory;
+
+    public int GetEquipmentSlotIdx()
+    {
+        int equipmentSlotIdx;
+
+        InventorySlotType inventorySlotType = inventory.GetSlotType(slotIdx, out equipmentSlotIdx);
+
+        if(inventorySlotType != InventorySlotType.Equipment)
+        {
+            return -1;
+        }
+        else
+        {
+            return equipmentSlotIdx;
+        }
+    }
 }
 
 public class Inventory
@@ -59,6 +78,8 @@ public class Inventory
         for(int i = 0; i < capacity; i++)
         {
             grids[i] = new InventoryGrid();
+            grids[i].inventory = this;
+            grids[i].slotIdx = i;
         }
     }
 
@@ -115,6 +136,22 @@ public class Inventory
             {
                 InventoryChangeEvent(inventorySlotType, slotIndexOfType, 0, null, RarityType.Normal);
             }
+        }
+    }
+
+    public int GetWeaponHand(int weaponSlotIdx)
+    {
+        if(weaponSlotIdx == weaponLeftSlot)
+        {
+            return 0;
+        }
+        else if (weaponSlotIdx == weaponRightSlot)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
         }
     }
 
@@ -250,6 +287,11 @@ public class Inventory
                     equipment.Equip();
                     return true;
                 }
+            }
+            else
+            {
+                int equipmentSlot = slotIdx - backpackSize;
+                owner.UnEquip(equipmentSlot);
             }
         }
 

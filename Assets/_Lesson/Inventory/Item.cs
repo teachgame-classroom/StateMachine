@@ -251,6 +251,8 @@ public interface IItemOwner
 {
     bool UseItem(Item item);
     bool Equip(Equipment equipment);
+
+    bool UnEquip(int equipmentSlotIdx);
 }
 
 public class ItemFactory
@@ -270,7 +272,9 @@ public class ItemFactory
     }
 }
 
-public enum EquipmentType { GunAxe, Axe, Gun, LeatherArmor, MagicArmor }
+public enum EquipmentType { None = -1, GunAxe, Axe, Gun, LeatherArmor, MagicArmor }
+
+public enum WeaponActionType { NoWeapon = -1, Melee, Range, MeleeAndRange }
 
 public class Axe : Weapon
 {
@@ -384,6 +388,8 @@ public class Item
     public InventoryGrid grid;
     public IItemOwner owner;
     public Sprite sprite;    
+
+    public int equipmentSlotIdx { get { return grid.GetEquipmentSlotIdx(); } }
 
     public Item(ItemInfo info, IItemOwner owner)
     {
