@@ -420,6 +420,34 @@ public class Item
         Debug.Log("生成了稀有度为" + this.rarity + "的" + this.itemName + ",Spec:" + this.spec.ToString());
     }
 
+    public Item(Item origin)
+    {
+        this.itemId = origin.itemId;
+        this.itemName = origin.itemName;
+
+        this.canStack = origin.canStack;
+
+        this.rarity = origin.rarity;
+
+        this.spec = Spec.Clone(origin.spec);
+
+        this.consumeWhenUsed = origin.consumeWhenUsed;
+        this.isEffectPermanent = origin.isEffectPermanent;
+        this.effectDuration = origin.effectDuration;
+        this.equipmentType = origin.equipmentType;
+
+        this.owner = origin.owner;
+        sprite = origin.sprite;
+
+        Debug.Log("生成了稀有度为" + this.rarity + "的" + this.itemName + ",Spec:" + this.spec.ToString());
+
+    }
+
+    public static Item Clone(Item origin)
+    {
+        return new Item(origin);
+    }
+
     public override string ToString()
     {
         string result = string.Format("itemId:{0}, itemName:{1}, spec:{2}", itemId.ToString(), itemName, spec.ToString());

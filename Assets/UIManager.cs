@@ -12,11 +12,14 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public RectTransform dragIcon;
+    public GameObject shopItemButtonPrefab;
 
     public RectTransform crosshair;
     public RectTransform characterPanel;
     private RectTransform backpackPanel;
     private RectTransform equipmentPanel;
+    private RectTransform shopPanel;
+    private RectTransform shopContentRoot;
 
     private RectTransform[] backpackSlots;
     private RectTransform[] equipmentSlots;
@@ -31,6 +34,9 @@ public class UIManager : MonoBehaviour
     public event InventoryDragDropDelegate InventoryBeginDragEvent;
     public event InventoryDragDropDelegate InventoryDropEvent;
     public event InventoryDragDropDelegate InventoryDropEmptyEvent;
+
+    public delegate void BuyItemDelegate(Item item);
+    public event BuyItemDelegate BuyItemEvent;
 
     float screenRatio { get { return (float)1280 / Screen.width; } }
 
@@ -83,6 +89,9 @@ public class UIManager : MonoBehaviour
         SetItemHover(InventorySlotType.Equipment, -1);
 
         dragIcon = transform.Find("DragIcon") as RectTransform;
+
+        shopPanel = transform.Find("ShopMenu") as RectTransform;
+        shopContentRoot = shopPanel.GetComponentInChildren<ScrollRect>().content;
     }
 
     public void OnInventoryChange(InventorySlotType inventorySlotType, int slotIdx, int itemCount, Sprite sprite, RarityType rarityType)
@@ -194,6 +203,41 @@ public class UIManager : MonoBehaviour
         {
             InventorySlotHoverEvent(slotType, idx);
         }
+    }
+
+    public void ClearShopItems()
+    {
+        for(int i = 0; i < shopContentRoot.childCount; i++)
+        {
+            Destroy(shopContentRoot.GetChild(i).gameObject);
+        }
+    }
+
+    public void CreateShopItemButton(Item item)
+    {
+        CreateShopItemButton(shopItemButtonPrefab, item);
+    }
+
+    public void CreateShopItemButton(GameObject buttonPrefab, Item item)
+    {
+        RarityType rarityType = item.rarity;
+        Color color = Rarity.GetColorByRarity(rarityType);
+
+        GameObject buttonInstance = GameObject.Instantiate(buttonPrefab, shopContentRoot);
+
+        Text nameText = buttonInstance.transform.Find("Name").GetComponent<Text>();
+        nameText.text = item.itemName;
+
+        Image icon = buttonInstance.transform.Find("Icon").GetComponent<Image>();
+        icon.sprite = item.sprite;
+
+        Text priceText = buttonInstance.transform.Find("Price").GetComponent<Text>();
+        priceText.text = Random.Range(1000, 10000).ToString();
+
+        nameText.color = color;
+
+        Button button = buttonInstance.GetComponent<Button>();
+        button.onClick.AddListener(() => { if (BuyItemEvent != null) { BuyItemEvent(item); } });
     }
 
     private RectTransform[] GetSlotByInventoryType(InventorySlotType slotType)

@@ -158,12 +158,13 @@ public class Inventory
     public bool PutInItem(int itemId, int itemCount = 1)
     {
         Item item = ItemFactory.CreateItem(itemId);
-        item.owner = this.owner;
         return PutInItem(item, itemCount);
     }
 
     public bool PutInItem(Item item, int itemCount = 1)
     {
+        item.owner = this.owner;
+
         int putInGridIdx = -1;
         int emptyGridIdx = -1;
         bool result = false;

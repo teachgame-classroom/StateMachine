@@ -178,6 +178,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             UIManager.instance.InventoryBeginDragEvent += inventory.OnInventoryBeginDrag;
             UIManager.instance.InventoryDropEvent += inventory.OnInventoryDrop;
             UIManager.instance.InventoryDropEmptyEvent += inventory.OnInventoryEmptyDrop;
+            UIManager.instance.BuyItemEvent += OnBuyItem;
             inventory.InventoryChangeEvent += UIManager.instance.OnInventoryChange;
             inventory.InventoryHasItemEvent += UIManager.instance.OnHasItemNotify;
             inventory.EquipmentSpecChangeEvent += OnEquipmentChange;
@@ -206,17 +207,6 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             }
 
             UpdateCrossHair();
-
-            if(Input.GetKeyDown(KeyCode.T))
-            {
-                outfitIdx++;
-                if(outfitIdx > 1)
-                {
-                    outfitIdx = 0;
-                }
-
-                SwitchOutfit(outfitIdx);
-            }
 
             if(Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -685,6 +675,21 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         }
     }
 
+    public void OnBuyItem(Item item)
+    {
+        GetItem(item);
+    }
+
+    public void GetItem(Item item, int itemCount = 1)
+    {
+        inventory.PutInItem(item, itemCount);
+    }
+
+    public void GetItem(int itemId, int itemCount = 1)
+    {
+        inventory.PutInItem(itemId, itemCount);
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         if(isPlayer)
@@ -693,7 +698,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
             if (pickup)
             {
-                inventory.PutInItem(pickup.itemId, pickup.itemCount);
+                GetItem(pickup.itemId, pickup.itemCount);
                 Destroy(collider.gameObject);
             }
         }
