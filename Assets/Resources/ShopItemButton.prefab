@@ -239,8 +239,9 @@ GameObject:
   - component: {fileID: 5152361168043803307}
   - component: {fileID: 5542442768522805648}
   - component: {fileID: 8400563150041566798}
+  - component: {fileID: 8764925813631234632}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ShopItemButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -347,6 +348,18 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &8764925813631234632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164790987432000311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2241ef2fb73606647a94dbc6ec436f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8462877602690037711
 GameObject:
   m_ObjectHideFlags: 0

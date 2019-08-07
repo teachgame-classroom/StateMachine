@@ -376,6 +376,7 @@ public class Item
     public int itemId;
     public string itemName;
     public Spec spec;
+    public int price;
 
     public RarityType rarity;
 
@@ -409,6 +410,10 @@ public class Item
 
         this.spec = Rarity.GetFinalSpecByRarity(info.spec, this.rarity);
 
+        float priceFactor = 1 + Rarity.GetRandomFactorByRarity(this.rarity);
+
+        this.price = (int)(info.price * priceFactor);
+
         this.consumeWhenUsed = info.consumeWhenUsed;
         this.isEffectPermanent = info.isEffectPermanent;
         this.effectDuration = info.effectDuration;
@@ -430,6 +435,7 @@ public class Item
         this.rarity = origin.rarity;
 
         this.spec = Spec.Clone(origin.spec);
+        this.price = origin.price;
 
         this.consumeWhenUsed = origin.consumeWhenUsed;
         this.isEffectPermanent = origin.isEffectPermanent;

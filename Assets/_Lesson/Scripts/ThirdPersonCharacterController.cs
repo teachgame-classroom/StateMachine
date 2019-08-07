@@ -94,6 +94,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
     public const int BACKPACK_SIZE = 40;
     public const int EQUIPMENT_SIZE = 12;
+    public const int START_MONEY = 20000;
     public Inventory inventory;
 
     public Item[] testItems = new Item[8];
@@ -104,10 +105,10 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         currentHp = baseSpec.hp;
 
         inventory = new Inventory(BACKPACK_SIZE, EQUIPMENT_SIZE, this);
+        inventory.SetMoney(START_MONEY);
 
         character = GetComponent<ThirdPersonCharacter>();
         stateMachine = new CharacterStateMachine(character);
-
 
         SlotMarker[] slots = GetComponentsInChildren<SlotMarker>(true);
 
@@ -179,9 +180,15 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             UIManager.instance.InventoryDropEvent += inventory.OnInventoryDrop;
             UIManager.instance.InventoryDropEmptyEvent += inventory.OnInventoryEmptyDrop;
             UIManager.instance.BuyItemEvent += OnBuyItem;
+
             inventory.InventoryChangeEvent += UIManager.instance.OnInventoryChange;
             inventory.InventoryHasItemEvent += UIManager.instance.OnHasItemNotify;
+            inventory.MoneyChangeEvent += UIManager.instance.OnMoneyChanged;
+            inventory.SendItemEvent += UIManager.instance.OnReceiveItemEvent;
+
             inventory.EquipmentSpecChangeEvent += OnEquipmentChange;
+
+            inventory.Refresh();
         }
     }
 
@@ -677,7 +684,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
     public void OnBuyItem(Item item)
     {
-        GetItem(item);
+        inventory.TryBuyItem(item);
     }
 
     public void GetItem(Item item, int itemCount = 1)

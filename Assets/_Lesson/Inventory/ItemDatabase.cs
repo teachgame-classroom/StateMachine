@@ -16,6 +16,7 @@ public class ItemInfo
     public float effectDuration;
     public EquipmentType weaponType;
     public Spec spec;
+    public int price;
 }
 
 [CreateAssetMenu(fileName = "ItemDatabase", menuName = "Item Database")]

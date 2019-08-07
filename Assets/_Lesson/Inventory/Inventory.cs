@@ -43,10 +43,18 @@ public class Inventory
     public delegate void EquipmentSpecChangeDelegate(Spec equipmentTotalSpec);
     public event EquipmentSpecChangeDelegate EquipmentSpecChangeEvent;
 
+    public delegate void MoneyChangeDelegate(int money);
+    public event MoneyChangeDelegate MoneyChangeEvent;
+
+    public delegate void SendItemDelegate(Item item);
+    public event SendItemDelegate SendItemEvent;
+
     private InventoryGrid[] grids;
 
     private int backpackSize;
     private int equipmentSize;
+
+    public int money { get; private set; }
 
     private int headSlot = 0;
     private int neckSlot = 1;
@@ -94,6 +102,44 @@ public class Inventory
         this.equipmentSize = equipmentSize;
     }
 
+    public void SetMoney(int amount)
+    {
+        money = Mathf.Max(0, amount);
+        if(MoneyChangeEvent != null)
+        {
+            MoneyChangeEvent(money);
+        }
+        Debug.Log("兜里现在有" + money + "块钱");
+    }
+
+    public int AddMoney(int amount)
+    {
+        if(amount > 0)
+        {
+            SetMoney(money + amount);
+        }
+
+        return money;
+    }
+
+    public bool SpendMoney(int amount)
+    {
+        if(HasEnoughMoney(amount))
+        {
+            SetMoney(money - amount);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool HasEnoughMoney(int amount)
+    {
+        return money >= amount;
+    }
+
     public int GetInternalSlotIndex(InventorySlotType slotType, int slotIdx)
     {
         if(slotType == InventorySlotType.Backpack)
@@ -137,6 +183,11 @@ public class Inventory
                 InventoryChangeEvent(inventorySlotType, slotIndexOfType, 0, null, RarityType.Normal);
             }
         }
+
+        if(MoneyChangeEvent != null)
+        {
+            MoneyChangeEvent(money);
+        }
     }
 
     public int GetWeaponHand(int weaponSlotIdx)
@@ -152,6 +203,20 @@ public class Inventory
         else
         {
             return -1;
+        }
+    }
+
+    public bool TryBuyItem(Item item)
+    {
+        if(SpendMoney(item.price))
+        {
+            Debug.Log("用" + item.price + "购买了" + item.itemName);
+            return PutInItem(item);
+        }
+        else
+        {
+            Debug.Log("拿不出" + item.price + "来买" + item.itemName);
+            return false;
         }
     }
 
@@ -495,6 +560,11 @@ public class Inventory
             if(item != null)
             {
                 Debug.Log(item.ToString());
+            }
+
+            if (SendItemEvent != null)
+            {
+                SendItemEvent(item);
             }
         }
     }

@@ -33,6 +33,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 10000
   - itemName: Axe
     itemId: 2
     className: Axe
@@ -53,6 +54,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 1500
   - itemName: Gun
     itemId: 3
     className: Gun
@@ -73,6 +75,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 2500
   - itemName: Health
     itemId: 4
     className: Potion
@@ -93,6 +96,7 @@ MonoBehaviour:
       recoverHp: 100
       recoverMana: 0
       recoverFury: 0
+    price: 500
   - itemName: Mana
     itemId: 5
     className: Potion
@@ -113,6 +117,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 100
       recoverFury: 0
+    price: 500
   - itemName: Fury
     itemId: 6
     className: Potion
@@ -133,6 +138,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 100
+    price: 500
   - itemName: Powerful Amulet
     itemId: 7
     className: Amulet
@@ -153,6 +159,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 3000
   - itemName: Fury Belt
     itemId: 8
     className: Belt
@@ -173,6 +180,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 2000
   - itemName: Leather Armor
     itemId: 9
     className: Armor
@@ -193,6 +201,7 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 1500
   - itemName: Magic Armor
     itemId: 10
     className: Armor
@@ -213,3 +222,4 @@ MonoBehaviour:
       recoverHp: 0
       recoverMana: 0
       recoverFury: 0
+    price: 6000

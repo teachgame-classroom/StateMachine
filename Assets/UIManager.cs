@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public RectTransform dragIcon;
+    public RectTransform floatingPanel;
+
     public GameObject shopItemButtonPrefab;
 
     public RectTransform crosshair;
@@ -26,6 +28,8 @@ public class UIManager : MonoBehaviour
 
     private RectTransform[] statInfos = new RectTransform[9];
 
+    private Text moneyText;
+
     public delegate void InventorySlotDelegate(InventorySlotType slotType, int slotIdx);
     public event InventorySlotDelegate InventorySlotClickEvent;
     public event InventorySlotDelegate InventorySlotHoverEvent;
@@ -38,15 +42,14 @@ public class UIManager : MonoBehaviour
     public delegate void BuyItemDelegate(Item item);
     public event BuyItemDelegate BuyItemEvent;
 
+
+
     float screenRatio { get { return (float)1280 / Screen.width; } }
 
     void Awake()
     {
         instance = this;
-    }
 
-    void Start()
-    {
         GameObject player = GameObject.Find("Player");
 
         TogglePanel(characterPanel, false);
@@ -57,17 +60,19 @@ public class UIManager : MonoBehaviour
 
         backpackSlots = new RectTransform[backpackRoot.childCount];
 
-        for(int i = 0; i < backpackRoot.childCount; i++)
+        for (int i = 0; i < backpackRoot.childCount; i++)
         {
             backpackSlots[i] = backpackRoot.GetChild(i) as RectTransform;
             backpackSlots[i].GetComponent<SlotHoverDetection>().slotIdx = i;
         }
 
+        moneyText = backpackPanel.Find("Footer/Gold").GetComponent<Text>();
+
         equipmentPanel = characterPanel.Find("Content/Equip Slots") as RectTransform;
 
         SlotHoverDetection[] hoverDetections = equipmentPanel.GetComponentsInChildren<SlotHoverDetection>();
         List<RectTransform> equipmentRectList = new List<RectTransform>();
-        for(int i = 0; i < hoverDetections.Length; i++)
+        for (int i = 0; i < hoverDetections.Length; i++)
         {
             hoverDetections[i].slotIdx = i;
             equipmentRectList.Add(hoverDetections[i].transform as RectTransform);
@@ -79,13 +84,13 @@ public class UIManager : MonoBehaviour
 
         StatsMarker[] statsMarkers = characterPanel.GetComponentsInChildren<StatsMarker>();
 
-        for(int i = 0; i < statsMarkers.Length; i++)
+        for (int i = 0; i < statsMarkers.Length; i++)
         {
             int idx = (int)statsMarkers[i].statsType;
             statInfos[idx] = statsMarkers[i].transform as RectTransform;
         }
 
-        SetItemHover(InventorySlotType.Backpack,-1);
+        SetItemHover(InventorySlotType.Backpack, -1);
         SetItemHover(InventorySlotType.Equipment, -1);
 
         dragIcon = transform.Find("DragIcon") as RectTransform;
@@ -98,7 +103,7 @@ public class UIManager : MonoBehaviour
     {
         RectTransform[] slots = GetSlotByInventoryType(inventorySlotType);
 
-        if(itemCount > 0)
+        if (itemCount > 0)
         {
             SetItemSlotSprite(slots, slotIdx, sprite, rarityType);
         }
@@ -115,6 +120,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        UpdateFloatingPanelPos();
     }
 
     public void SetStats(StatsType statsType, float stat)
@@ -133,7 +139,7 @@ public class UIManager : MonoBehaviour
 
     public void CenterCrosshair()
     {
-        crosshair.anchoredPosition = (Vector3.right * Screen.width + Vector3.up * Screen.height ) / 2 * screenRatio;
+        crosshair.anchoredPosition = (Vector3.right * Screen.width + Vector3.up * Screen.height) / 2 * screenRatio;
         ToggleCrosshair(true);
     }
 
@@ -146,6 +152,12 @@ public class UIManager : MonoBehaviour
     {
         return screenPos * screenRatio;
     }
+
+    public Vector3 CanvasToScreenPoint(Vector3 canvasPos, float screenRatio)
+    {
+        return canvasPos / screenRatio;
+    }
+
 
     public void TogglePanel(RectTransform panel, bool setActive)
     {
@@ -166,7 +178,7 @@ public class UIManager : MonoBehaviour
 
         Image bgImage = slots[idx].Find("BG").GetComponent<Image>();
 
-        if(iconImage.sprite)
+        if (iconImage.sprite)
         {
             iconImage.gameObject.SetActive(true);
             bgImage.color = Rarity.GetColorByRarity(rarityType);
@@ -207,7 +219,7 @@ public class UIManager : MonoBehaviour
 
     public void ClearShopItems()
     {
-        for(int i = 0; i < shopContentRoot.childCount; i++)
+        for (int i = 0; i < shopContentRoot.childCount; i++)
         {
             Destroy(shopContentRoot.GetChild(i).gameObject);
         }
@@ -232,12 +244,15 @@ public class UIManager : MonoBehaviour
         icon.sprite = item.sprite;
 
         Text priceText = buttonInstance.transform.Find("Price").GetComponent<Text>();
-        priceText.text = Random.Range(1000, 10000).ToString();
+        priceText.text = item.price.ToString();
 
         nameText.color = color;
 
         Button button = buttonInstance.GetComponent<Button>();
         button.onClick.AddListener(() => { if (BuyItemEvent != null) { BuyItemEvent(item); } });
+
+        ShopItemButtonHoverDetection hover = buttonInstance.GetComponent<ShopItemButtonHoverDetection>();
+        hover.item = item;
     }
 
     private RectTransform[] GetSlotByInventoryType(InventorySlotType slotType)
@@ -264,6 +279,8 @@ public class UIManager : MonoBehaviour
             {
                 slots[i].Find("Hover").gameObject.SetActive(false);
             }
+
+            ToggleFloatingPanel(false);
         }
         else
         {
@@ -274,7 +291,7 @@ public class UIManager : MonoBehaviour
 
     public void OnSlotBeginDrag(InventorySlotType slotType, int slotIdx)
     {
-        if(InventoryBeginDragEvent != null)
+        if (InventoryBeginDragEvent != null)
         {
             InventoryBeginDragEvent(slotType, slotIdx);
         }
@@ -291,7 +308,7 @@ public class UIManager : MonoBehaviour
 
         Transform numberTrans = slots[slotIdx].Find("Number");
 
-        if(numberTrans)
+        if (numberTrans)
         {
             string text = numberTrans.GetComponent<Text>().text;
             dragIcon.GetComponentInChildren<Text>().text = text;
@@ -304,16 +321,15 @@ public class UIManager : MonoBehaviour
 
     public void OnSlotDrag(InventorySlotType slotType, int slotIdx)
     {
-        if(dragIcon.gameObject.activeSelf)
+        if (dragIcon.gameObject.activeSelf)
         {
             dragIcon.anchoredPosition = ScreenToCanvasPoint(Input.mousePosition, screenRatio);
         }
     }
 
-
     public void OnSlotDrop(InventorySlotType slotType, int slotIdx)
     {
-        if(InventoryDropEvent != null)
+        if (InventoryDropEvent != null)
         {
             InventoryDropEvent(slotType, slotIdx);
         }
@@ -329,7 +345,7 @@ public class UIManager : MonoBehaviour
 
     public void OnEmptyDrop(InventorySlotType slotType, int slotIdx)
     {
-        if(InventoryDropEmptyEvent != null)
+        if (InventoryDropEmptyEvent != null)
         {
             InventoryDropEmptyEvent(slotType, slotIdx);
         }
@@ -340,10 +356,78 @@ public class UIManager : MonoBehaviour
     public void OnSlotClicked(InventorySlotType slotType, int slotIdx)
     {
         Debug.Log("点击了" + slotIdx + "号格子");
-        if(InventorySlotClickEvent != null)
+        if (InventorySlotClickEvent != null)
         {
             InventorySlotClickEvent(slotType, slotIdx);
         }
+    }
+
+    public void OnReceiveItemEvent(Item item)
+    {
+        ShowFloatingItemInfo(item);
+    }
+
+    public void ShowFloatingItemInfo(Item item)
+    {
+        if (item != null)
+        {
+            ToggleFloatingPanel(true);
+            UpdateFloatingPanelInfo(item);
+        }
+        else
+        {
+            ToggleFloatingPanel(false);
+        }
+    }
+
+    public void ToggleFloatingPanel(bool setActive)
+    {
+        floatingPanel.gameObject.SetActive(setActive);
+    }
+       
+    public void UpdateFloatingPanelInfo(Item item)
+    {
+        Text nameText = floatingPanel.Find("NameText").GetComponent<Text>();
+        Text atkText = floatingPanel.Find("Atk/ValueText").GetComponent<Text>();
+        Text defText = floatingPanel.Find("Def/ValueText").GetComponent<Text>();
+        Text dexText = floatingPanel.Find("Dex/ValueText").GetComponent<Text>();
+        Text hpText = floatingPanel.Find("Health/ValueText").GetComponent<Text>();
+        Text manaText = floatingPanel.Find("Mana/ValueText").GetComponent<Text>();
+        Text furyText = floatingPanel.Find("Fury/ValueText").GetComponent<Text>();
+        Text hpregenText = floatingPanel.Find("RegenHealth/ValueText").GetComponent<Text>();
+
+        nameText.text = item.itemName;
+        atkText.text = item.spec.atk.ToString();
+        defText.text = item.spec.def.ToString();
+        dexText.text = item.spec.dex.ToString();
+        hpText.text = item.spec.hp.ToString();
+        manaText.text = item.spec.mana.ToString();
+        furyText.text = item.spec.fury.ToString();
+        hpregenText.text = item.spec.recoverHp.ToString();
+    }
+
+    public void UpdateFloatingPanelPos()
+    {
+        if(floatingPanel.gameObject.activeInHierarchy)
+        {
+            float viewportHeight = Camera.main.ScreenToViewportPoint(Input.mousePosition).y;
+
+            if (viewportHeight > 0.4f)
+            {
+                floatingPanel.pivot = new Vector2(0.5f, 1.1f);
+            }
+            else
+            {
+                floatingPanel.pivot = new Vector2(0.5f, -0.1f);
+            }
+
+            floatingPanel.anchoredPosition = ScreenToCanvasPoint(Input.mousePosition, screenRatio);
+        }
+    }
+
+    public void OnMoneyChanged(int money)
+    {
+        moneyText.text = money.ToString();
     }
 
     [MenuItem("Tools/Rename Selected...")]
