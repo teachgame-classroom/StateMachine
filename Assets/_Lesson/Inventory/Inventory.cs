@@ -34,7 +34,7 @@ public class Inventory
     public int gridOnDrag = -1;
     public int gridOnDrop = -1;
 
-    public delegate void InventoryChangeDelegate(InventorySlotType slotType, int gridIdx, int itemCount, Sprite sprite, RarityType rarityType);
+    public delegate void InventoryChangeDelegate(InventorySlotType slotType, int gridIdx, int itemId, int itemCount, Sprite sprite, RarityType rarityType);
     public event InventoryChangeDelegate InventoryChangeEvent;
 
     public delegate void InventorySlotDelegate(InventorySlotType slotType, int gridIdx);
@@ -176,11 +176,11 @@ public class Inventory
 
             if(grids[i].item != null)
             {
-                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[i].itemCount, grids[i].item.sprite, grids[i].item.rarity);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[i].item.itemId, grids[i].itemCount, grids[i].item.sprite, grids[i].item.rarity);
             }
             else
             {
-                InventoryChangeEvent(inventorySlotType, slotIndexOfType, 0, null, RarityType.Normal);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, -1, 0, null, RarityType.Normal);
             }
         }
 
@@ -281,7 +281,7 @@ public class Inventory
                 int slotIndexOfType;
                 InventorySlotType inventorySlotType = GetSlotType(putInGridIdx, out slotIndexOfType);
 
-                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite, grids[putInGridIdx].item.rarity);
+                InventoryChangeEvent(inventorySlotType, slotIndexOfType, grids[putInGridIdx].item.itemId, grids[putInGridIdx].itemCount, grids[putInGridIdx].item.sprite, grids[putInGridIdx].item.rarity);
             }
         }
         else
@@ -535,18 +535,20 @@ public class Inventory
             Debug.Log(grids[slotIdx].itemCount);
         }
 
+        int itemId = -1;
         int itemCount = grids[slotIdx].itemCount;
         RarityType rarityType = grids[slotIdx].item.rarity;
         Sprite sprite = null;
 
         if (grids[slotIdx].item != null)
         {
+            itemId = grids[slotIdx].item.itemId;
             sprite = grids[slotIdx].item.sprite;
         }
 
         int slotIndexOfType;
         InventorySlotType inventorySlotType = GetSlotType(slotIdx, out slotIndexOfType);
-        InventoryChangeEvent(inventorySlotType, slotIndexOfType, itemCount, sprite, rarityType);
+        InventoryChangeEvent(inventorySlotType, slotIndexOfType, itemId, itemCount, sprite, rarityType);
     }
 
     public void OnInventorySlotHover(InventorySlotType slotType, int slotIdx)
@@ -572,5 +574,21 @@ public class Inventory
     public bool HasItem(int slotIdx)
     {
         return grids[slotIdx].itemCount > 0 && grids[slotIdx].item != null;
+    }
+
+    public int GetItemCount(int itemId)
+    {
+        for(int i = 0; i < grids.Length; i++)
+        {
+            if(grids[i].itemCount > 0 && grids[i].item != null)
+            {
+                if(grids[i].item.itemId == itemId)
+                {
+                    return grids[i].itemCount;
+                }
+            }
+        }
+
+        return 0;
     }
 }

@@ -6,6 +6,8 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance;
 
+    private QuestManager questManager;
+
     public ThirdPersonCharacterController playerController;
     public CameraFollow cameraFollow;
 
@@ -13,6 +15,10 @@ public class GameController : MonoBehaviour
     void Awake()
     {
         instance = this;
+        questManager = GetComponent<QuestManager>();
+
+        questManager.SendQuestsEvent += UIManager.instance.OnQuestsEvent;
+        UIManager.instance.QuestButtonClickEvent += questManager.OnQuestButtonClicked;
     }
 
     void Start()

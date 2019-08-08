@@ -186,6 +186,8 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             inventory.MoneyChangeEvent += UIManager.instance.OnMoneyChanged;
             inventory.SendItemEvent += UIManager.instance.OnReceiveItemEvent;
 
+            inventory.InventoryChangeEvent += QuestManager.instance.OnInventoryChange;
+
             inventory.EquipmentSpecChangeEvent += OnEquipmentChange;
 
             inventory.Refresh();

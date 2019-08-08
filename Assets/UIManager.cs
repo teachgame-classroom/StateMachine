@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     public RectTransform floatingPanel;
 
     public GameObject shopItemButtonPrefab;
+    public GameObject questItemButtonPrefab;
+
+    public QuestList questList;
 
     public RectTransform crosshair;
     public RectTransform characterPanel;
@@ -22,6 +25,10 @@ public class UIManager : MonoBehaviour
     private RectTransform equipmentPanel;
     private RectTransform shopPanel;
     private RectTransform shopContentRoot;
+
+    private RectTransform questPanel;
+    private RectTransform questContentRoot;
+    private List<RectTransform> questButtons = new List<RectTransform>();
 
     private RectTransform[] backpackSlots;
     private RectTransform[] equipmentSlots;
@@ -42,7 +49,8 @@ public class UIManager : MonoBehaviour
     public delegate void BuyItemDelegate(Item item);
     public event BuyItemDelegate BuyItemEvent;
 
-
+    public delegate void IntDelegate(int i);
+    public event IntDelegate QuestButtonClickEvent;
 
     float screenRatio { get { return (float)1280 / Screen.width; } }
 
@@ -97,9 +105,17 @@ public class UIManager : MonoBehaviour
 
         shopPanel = transform.Find("ShopMenu") as RectTransform;
         shopContentRoot = shopPanel.GetComponentInChildren<ScrollRect>().content;
+
+        questPanel = transform.Find("QuestMenu") as RectTransform;
+        questContentRoot = questPanel.GetComponentInChildren<ScrollRect>().content;
+
+        //for(int i = 0; i < questList.quests.Length; i++)
+        //{
+        //    CreateQuestButton(questList.quests[i]);
+        //}
     }
 
-    public void OnInventoryChange(InventorySlotType inventorySlotType, int slotIdx, int itemCount, Sprite sprite, RarityType rarityType)
+    public void OnInventoryChange(InventorySlotType inventorySlotType, int slotIdx, int itemId, int itemCount, Sprite sprite, RarityType rarityType)
     {
         RectTransform[] slots = GetSlotByInventoryType(inventorySlotType);
 
@@ -217,12 +233,23 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ClearPanelContents(RectTransform rootPanel)
+    {
+        for (int i = 0; i < rootPanel.childCount; i++)
+        {
+            Destroy(rootPanel.GetChild(i).gameObject);
+        }
+    }
+
+    public GameObject CreatePanelContent(RectTransform rootPanel, GameObject contentPrefab)
+    {
+        GameObject contentInstance = GameObject.Instantiate(contentPrefab, rootPanel);
+        return contentInstance;
+    }
+
     public void ClearShopItems()
     {
-        for (int i = 0; i < shopContentRoot.childCount; i++)
-        {
-            Destroy(shopContentRoot.GetChild(i).gameObject);
-        }
+        ClearPanelContents(shopContentRoot);
     }
 
     public void CreateShopItemButton(Item item)
@@ -232,10 +259,14 @@ public class UIManager : MonoBehaviour
 
     public void CreateShopItemButton(GameObject buttonPrefab, Item item)
     {
+        GameObject buttonInstance = CreatePanelContent(shopContentRoot, buttonPrefab);
+        SetupItemButton(buttonInstance, item);
+    }
+
+    public void SetupItemButton(GameObject buttonInstance, Item item)
+    {
         RarityType rarityType = item.rarity;
         Color color = Rarity.GetColorByRarity(rarityType);
-
-        GameObject buttonInstance = GameObject.Instantiate(buttonPrefab, shopContentRoot);
 
         Text nameText = buttonInstance.transform.Find("Name").GetComponent<Text>();
         nameText.text = item.itemName;
@@ -253,6 +284,58 @@ public class UIManager : MonoBehaviour
 
         ShopItemButtonHoverDetection hover = buttonInstance.GetComponent<ShopItemButtonHoverDetection>();
         hover.item = item;
+    }
+
+    public void OnQuestsEvent(Quest[] quests)
+    {
+        RefreshQuestPanel(quests);
+    }
+
+    public void RefreshQuestPanel(Quest[] quests)
+    {
+        ClearQuest();
+
+        for(int i = 0; i < quests.Length; i++)
+        {
+            CreateQuestButton(quests[i]);
+        }
+    }
+
+    public void ClearQuest()
+    {
+        ClearPanelContents(questContentRoot);
+    }
+
+    public void CreateQuestButton(Quest quest)
+    {
+        CreateQuestButton(questItemButtonPrefab, quest);
+    }
+
+    public void CreateQuestButton(GameObject questButtonPrefab, Quest quest)
+    {
+        GameObject buttonInstance = CreatePanelContent(questContentRoot, questButtonPrefab);
+        questButtons.Add(buttonInstance.transform as RectTransform);
+        SetupQuestButton(buttonInstance, quest);
+    }
+
+    public void SetupQuestButton(GameObject buttonInstance, Quest quest)
+    {
+        int questId = quest.questId;
+        buttonInstance.transform.Find("Name").GetComponent<Text>().text = quest.questName;
+        buttonInstance.GetComponent<Button>().onClick.AddListener(() => { OnQuestButtonClick(questId); });
+    }
+
+    public void OnQuestButtonClick(int idx)
+    {
+        if(QuestButtonClickEvent != null)
+        {
+            QuestButtonClickEvent(idx);
+        }
+    }
+
+    public void OnQuestStatusChange(int questId, string status)
+    {
+        questButtons[questId].Find("Status").GetComponent<Text>().text = status;
     }
 
     private RectTransform[] GetSlotByInventoryType(InventorySlotType slotType)
