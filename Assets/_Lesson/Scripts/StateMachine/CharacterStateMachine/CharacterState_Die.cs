@@ -14,6 +14,7 @@ public class CharacterState_Die : CharacterState
     public override void Enter()
     {
         base.Enter();
+        GameController.instance.EnemyDie(character);
         anim.applyRootMotion = true;
         anim.SetTrigger("Die");
     }

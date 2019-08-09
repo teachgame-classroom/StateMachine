@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemInfos:
   - itemName: GunAxe
+    itemNameCN: "\u65A7\u67AA"
     itemId: 1
     className: GunAxe
     textureId: 0
@@ -35,6 +36,7 @@ MonoBehaviour:
       recoverFury: 0
     price: 10000
   - itemName: Axe
+    itemNameCN: "\u65A7\u5934"
     itemId: 2
     className: Axe
     textureId: 0
@@ -56,6 +58,7 @@ MonoBehaviour:
       recoverFury: 0
     price: 1500
   - itemName: Gun
+    itemNameCN: "\u5DE6\u8F6E\u624B\u67AA"
     itemId: 3
     className: Gun
     textureId: 0
@@ -77,6 +80,7 @@ MonoBehaviour:
       recoverFury: 0
     price: 2500
   - itemName: Health
+    itemNameCN: "\u751F\u547D\u836F\u6C34"
     itemId: 4
     className: Potion
     textureId: 0
@@ -98,10 +102,11 @@ MonoBehaviour:
       recoverFury: 0
     price: 500
   - itemName: Mana
+    itemNameCN: "\u9B54\u529B\u836F\u6C34"
     itemId: 5
     className: Potion
     textureId: 0
-    spriteId: 14
+    spriteId: 24
     canStack: 1
     consumeWhenUsed: 1
     isEffectPermanent: 0
@@ -119,10 +124,11 @@ MonoBehaviour:
       recoverFury: 0
     price: 500
   - itemName: Fury
+    itemNameCN: "\u6012\u6C14\u836F\u6C34"
     itemId: 6
     className: Potion
     textureId: 0
-    spriteId: 14
+    spriteId: 4
     canStack: 1
     consumeWhenUsed: 1
     isEffectPermanent: 0
@@ -140,6 +146,7 @@ MonoBehaviour:
       recoverFury: 100
     price: 500
   - itemName: Powerful Amulet
+    itemNameCN: "\u529B\u91CF\u62A4\u8EAB\u7B26"
     itemId: 7
     className: Amulet
     textureId: 0
@@ -161,6 +168,7 @@ MonoBehaviour:
       recoverFury: 0
     price: 3000
   - itemName: Fury Belt
+    itemNameCN: "\u6012\u6C14\u8170\u5E26"
     itemId: 8
     className: Belt
     textureId: 0
@@ -182,6 +190,7 @@ MonoBehaviour:
       recoverFury: 0
     price: 2000
   - itemName: Leather Armor
+    itemNameCN: "\u76AE\u7532"
     itemId: 9
     className: Armor
     textureId: 0
@@ -203,6 +212,7 @@ MonoBehaviour:
       recoverFury: 0
     price: 1500
   - itemName: Magic Armor
+    itemNameCN: "\u9B54\u6CD5\u62A4\u7532"
     itemId: 10
     className: Armor
     textureId: 0

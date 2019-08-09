@@ -79,24 +79,59 @@ public class Rarity
         }
     }
 
-    public static Color GetColorByRarity(RarityType rarityType)
+    public static Color GetColorByRarity(RarityType rarityType, bool isBackground = false)
     {
         switch (rarityType)
         {
             case RarityType.Normal:
-                return Color.black;
+                if(isBackground)
+                {
+                    return Color.black;
+                }
+                else
+                {
+                    return Color.white;
+                }
             case RarityType.Blue:
-                return Color.blue;
+                return new Color(0, 0.75f, 1, 1);
             case RarityType.Yellow:
                 return Color.yellow;
             case RarityType.Purple:
-                return new Color(0.5f, 0, 1, 1);
+                return new Color(1, 0, 1, 1);
             case RarityType.Orange:
                 return new Color(1f, 0.5f, 0, 1);
             default:
-                return Color.black;
+                if (isBackground)
+                {
+                    return Color.black;
+                }
+                else
+                {
+                    return Color.white;
+                }
         }
     }
+
+    public static string GetPrefixByRarity(RarityType rarity)
+    {
+        switch (rarity)
+        {
+            case RarityType.Normal:
+                return "";
+            case RarityType.Blue:
+                return "精制的";
+            case RarityType.Yellow:
+                return "极稀有的";
+            case RarityType.Purple:
+                return "举世无双的";
+            case RarityType.Orange:
+                return "毁天灭地的";
+            default:
+                return "";
+        }
+    }
+
+
 }
 
 [System.Serializable]
@@ -375,6 +410,8 @@ public class Item
 {
     public int itemId;
     public string itemName;
+    public string itemNameCN;
+
     public Spec spec;
     public int price;
 
@@ -407,6 +444,8 @@ public class Item
         {
             this.rarity = Rarity.GetRandomRarity();
         }
+
+        this.itemNameCN = Rarity.GetPrefixByRarity(this.rarity) + info.itemNameCN;
 
         this.spec = Rarity.GetFinalSpecByRarity(info.spec, this.rarity);
 

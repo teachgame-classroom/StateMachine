@@ -178,8 +178,8 @@ public class CharacterState_GroundMovement_Gun : CharacterState
 
             if (buttonName == InputList.R2)
             {
-                Debug.Log("Gun:" + controller.weaponActionType);
-                if (controller.weaponActionType == WeaponActionType.Melee || controller.weaponActionType == WeaponActionType.MeleeAndRange)
+                Debug.Log("Gun:" + character.weaponActionType);
+                if (character.weaponActionType == WeaponActionType.Melee || character.weaponActionType == WeaponActionType.MeleeAndRange)
                 {
                     stateMachine.SetState<CharacterState_GroundMovement_Axe>();
                 }
@@ -201,13 +201,13 @@ public class CharacterState_GroundMovement_Gun : CharacterState
 
             if (buttonName == InputList.FIRE3)
             {
-                controller.SwitchTarget();
+                character.SwitchTarget();
                 //stateMachine.SetState<CharacterState_Crouch>();
             }
 
             if (buttonName == InputList.FIRE4)
             {
-                controller.CancelLockOn();
+                character.CancelLockOn();
             }
         }
     }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class ItemInfo
 {
     public string itemName;
+    public string itemNameCN;
     public int itemId;
     public string className;
     public int textureId;

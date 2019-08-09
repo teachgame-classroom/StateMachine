@@ -1,16 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets.Characters.ThirdPerson;
-
 public enum MoveInputAxis { Horizontal, Vertical, Both, None }
 
 public class CharacterState : State
 {
-    protected ThirdPersonCharacterController controller;
-    protected ThirdPersonCharacter character;
+    protected ThirdPersonCharacterController character;
     protected Rigidbody body;
-    protected Animator anim { get { return character.m_Animator; } }
+    protected Animator anim { get { return character.anim; } }
 
     public CharacterState() : base()
     {
@@ -20,7 +17,6 @@ public class CharacterState : State
     public CharacterState(CharacterStateMachine stateMachine, string stateName) : base(stateMachine, stateName)
     {
         character = stateMachine.character;
-        controller = stateMachine.controller;
 
         body = character.GetComponent<Rigidbody>();
 
@@ -39,7 +35,7 @@ public class CharacterState : State
     {
         base.Update();
 
-        if(!controller.isAlive)
+        if(!character.isAlive)
         {
             stateMachine.SetState<CharacterState_Die>();
         }
@@ -50,13 +46,11 @@ public class CharacterStateMachine : StateMachine
 {
     public MoveInputAxis moveInputAxis = MoveInputAxis.Both;
 
-    public ThirdPersonCharacter character;
-    public ThirdPersonCharacterController controller;
+    public ThirdPersonCharacterController character;
 
-    public CharacterStateMachine(ThirdPersonCharacter character)
+    public CharacterStateMachine(ThirdPersonCharacterController character)
     {
         this.character = character;
-        this.controller = character.GetComponent<ThirdPersonCharacterController>();
         this.states = CreateAllStates<CharacterState>();
         for(int i = 0; i < states.Length; i++)
         {

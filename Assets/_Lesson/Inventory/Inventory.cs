@@ -571,6 +571,15 @@ public class Inventory
         }
     }
 
+    public void OnQuestProgress(QuestProgress questProgress)
+    {
+        if(questProgress.questType == QuestType.FindItem)
+        {
+            int itemCount = GetItemCount(questProgress.targetItemID);
+            QuestManager.instance.ReceiveItemCount(questProgress.targetItemID, itemCount);
+        }
+    }
+
     public bool HasItem(int slotIdx)
     {
         return grids[slotIdx].itemCount > 0 && grids[slotIdx].item != null;

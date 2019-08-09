@@ -20,22 +20,36 @@ MonoBehaviour:
     questTargetItemID: 1
     questTargetDestinationIdx: 0
     questTargetCount: 1
-  - questName: "\u6D88\u706D\u654C\u4EBA"
+  - questName: "\u6D88\u706D2\u4E2A\u84DD\u8272\u654C\u4EBA"
     questId: 1
     questDescription: 
     questType: 1
-    questTargetItemID: 0
+    questTargetItemID: 1
     questTargetDestinationIdx: 0
-    questTargetCount: 1
-  - questName: "\u627E\u5230\u6B66\u5668\u5E97\u8001\u677F"
+    questTargetCount: 2
+  - questName: "\u6D88\u706D3\u4E2A\u7EA2\u8272\u654C\u4EBA"
     questId: 2
+    questDescription: 
+    questType: 1
+    questTargetItemID: 2
+    questTargetDestinationIdx: 0
+    questTargetCount: 3
+  - questName: "\u627E\u5230\u6B66\u5668\u5E97\u8001\u677F"
+    questId: 3
+    questDescription: 
+    questType: 2
+    questTargetItemID: 0
+    questTargetDestinationIdx: 99
+    questTargetCount: 0
+  - questName: "\u53D1\u73B0\u5929\u68AF"
+    questId: 4
     questDescription: 
     questType: 2
     questTargetItemID: 0
     questTargetDestinationIdx: 0
     questTargetCount: 0
   - questName: "\u6536\u96C66\u4E2A\u836F\u74F6"
-    questId: 3
+    questId: 5
     questDescription: 
     questType: 0
     questTargetItemID: 4

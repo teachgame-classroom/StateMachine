@@ -173,8 +173,8 @@ public class CharacterState_GroundMovement_Axe : CharacterState
         {
             if (buttonName == InputList.R1)
             {
-                Debug.Log("Axe:" + controller.weaponActionType);
-                if(controller.weaponActionType == WeaponActionType.Range || controller.weaponActionType == WeaponActionType.MeleeAndRange)
+                Debug.Log("Axe:" + character.weaponActionType);
+                if(character.weaponActionType == WeaponActionType.Range || character.weaponActionType == WeaponActionType.MeleeAndRange)
                 {
                     stateMachine.SetState<CharacterState_GroundMovement_Gun>();
                 }

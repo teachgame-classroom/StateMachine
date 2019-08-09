@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
     public ThirdPersonCharacterController playerController;
     public CameraFollow cameraFollow;
 
+    public delegate void EnemyNotifyDelegate(ThirdPersonCharacterController controller);
+    public event EnemyNotifyDelegate EnemyDieEvent;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -35,6 +38,16 @@ public class GameController : MonoBehaviour
             playerController.inventory.Refresh();
             UIManager.instance.ToggleCharacterPanel();
             cameraFollow.freezeCamera = !cameraFollow.freezeCamera;
+        }
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            UIManager.instance.ToggleQuestPanel();
+        }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            UIManager.instance.ToggleShopPanel();
         }
     }
 
@@ -61,6 +74,17 @@ public class GameController : MonoBehaviour
                 default:
                     break;
             }
+        }
+
+        QuestManager.instance.ReachDestination((int)para[0]);
+    }
+
+    public void EnemyDie(ThirdPersonCharacterController controller)
+    {
+        Debug.Log("类型为" + controller.characterType + "的敌人" + controller.gameObject.name + "挂了");
+        if(EnemyDieEvent != null)
+        {
+            EnemyDieEvent(controller);
         }
     }
 }

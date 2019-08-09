@@ -69,11 +69,11 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
 
         if(!isTriggerSet)
         {
-            if (controller.hasTarget)
+            if (character.hasTarget)
             {
-                if (controller.IsAimAtTarget() == false)
+                if (character.IsAimAtTarget() == false)
                 {
-                    controller.RotateTowardTarget();
+                    character.RotateTowardTarget();
                 }
                 else
                 {
@@ -82,9 +82,9 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
             }
             else
             {
-                if (controller.IsAimAtTarget() == false)
+                if (character.IsAimAtTarget() == false)
                 {
-                    controller.RotateTowardAimDirection();
+                    character.RotateTowardAimDirection();
                 }
                 else
                 {
@@ -99,8 +99,8 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
 
         //Debug.Log("Attack02 AttackCurve:" + attackCurve);
 
-        Debug.DrawLine(controller.transform.position, controller.transform.position + controller.transform.forward * 5, Color.red);
-        Debug.DrawLine(controller.transform.position, controller.targetDirection * 5, Color.green);
+        Debug.DrawLine(character.transform.position, character.transform.position + character.transform.forward * 5, Color.red);
+        Debug.DrawLine(character.transform.position, character.targetDirection * 5, Color.green);
     }
 
 
@@ -108,11 +108,11 @@ public class CharacterState_RangeAttackBase : CharacterState_AttackBase
     {
         if(eventName == "WpnPullTrigerLeft")
         {
-            controller.Shoot(ThirdPersonCharacterController.LEFT);
+            character.Shoot(ThirdPersonCharacterController.LEFT);
         }
         else if (eventName == "WpnPullTrigerRight")
         {
-            controller.Shoot(ThirdPersonCharacterController.RIGHT);
+            character.Shoot(ThirdPersonCharacterController.RIGHT);
         }
         else if (eventName == "ComboEnd")
         {

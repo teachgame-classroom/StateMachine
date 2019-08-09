@@ -1,26 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets.Characters.ThirdPerson;
 
 
 public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, IItemOwner
 {
+    public int characterType;
+
     public WeaponActionType weaponActionType;
     private EquipmentType[] weaponTypes = new EquipmentType[2];
 
-    public Transform[] outfits;
-    private int currentOutfitIdx = 0;
+    public Animator anim;
 
-    private int outfitIdx = 0;
+    public Transform[] outfits;
+    protected Animator[] outfitAnimators;
+
+    private int currentOutfitIdx = 0;
 
     public const int LEFT = 0;
     public const int RIGHT = 1;
 
     public bool isPlayer;
     protected CharacterStateMachine stateMachine;
-    protected ThirdPersonCharacter character;
-
     public Spec baseSpec;
     private Spec equipmentTotalSpec;
 
@@ -107,9 +108,6 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
         inventory = new Inventory(BACKPACK_SIZE, EQUIPMENT_SIZE, this);
         inventory.SetMoney(START_MONEY);
 
-        character = GetComponent<ThirdPersonCharacter>();
-        stateMachine = new CharacterStateMachine(character);
-
         SlotMarker[] slots = GetComponentsInChildren<SlotMarker>(true);
 
         foreach (SlotMarker slot in slots)
@@ -161,6 +159,15 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
 
         if (isPlayer)
         {
+            outfitAnimators = new Animator[outfits.Length];
+
+            for(int i = 0; i < outfits.Length; i++)
+            {
+                outfitAnimators[i] = outfits[i].GetComponent<Animator>();
+            }
+
+            anim = outfitAnimators[currentOutfitIdx];
+
             InputManager.instance.InputEvent_Axis += OnInputAxis;
             InputManager.instance.InputEvent_Button += OnInputButton;
 
@@ -187,11 +194,19 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             inventory.SendItemEvent += UIManager.instance.OnReceiveItemEvent;
 
             inventory.InventoryChangeEvent += QuestManager.instance.OnInventoryChange;
+            QuestManager.instance.QuestProgressEvent += inventory.OnQuestProgress;
+            GameController.instance.EnemyDieEvent += QuestManager.instance.OnEnemyDie;
 
             inventory.EquipmentSpecChangeEvent += OnEquipmentChange;
 
             inventory.Refresh();
         }
+        else
+        {
+            anim = GetComponent<Animator>();
+        }
+
+        stateMachine = new CharacterStateMachine(this);
     }
 
     private void OnInputButton(string buttonName, ButtonEventType eventType)
@@ -678,7 +693,7 @@ public class ThirdPersonCharacterController : MonoBehaviour, ICameraFollowable, 
             else
             {
                 outfits[i].gameObject.SetActive(true);
-                character.m_Animator = outfits[i].GetComponent<Animator>();
+                anim = outfitAnimators[i];
                 currentOutfitIdx = i;
             }
         }

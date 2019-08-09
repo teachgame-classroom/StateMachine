@@ -197,12 +197,12 @@ public class UIManager : MonoBehaviour
         if (iconImage.sprite)
         {
             iconImage.gameObject.SetActive(true);
-            bgImage.color = Rarity.GetColorByRarity(rarityType);
+            bgImage.color = Rarity.GetColorByRarity(rarityType, true);
         }
         else
         {
             iconImage.gameObject.SetActive(false);
-            bgImage.color = Rarity.GetColorByRarity(RarityType.Normal);
+            bgImage.color = Rarity.GetColorByRarity(RarityType.Normal, true);
         }
     }
 
@@ -269,7 +269,9 @@ public class UIManager : MonoBehaviour
         Color color = Rarity.GetColorByRarity(rarityType);
 
         Text nameText = buttonInstance.transform.Find("Name").GetComponent<Text>();
-        nameText.text = item.itemName;
+        nameText.text = item.itemNameCN;
+
+        Shadow nameShadow = nameText.GetComponent<Shadow>();
 
         Image icon = buttonInstance.transform.Find("Icon").GetComponent<Image>();
         icon.sprite = item.sprite;
@@ -278,6 +280,7 @@ public class UIManager : MonoBehaviour
         priceText.text = item.price.ToString();
 
         nameText.color = color;
+        nameShadow.effectColor = color / 2;
 
         Button button = buttonInstance.GetComponent<Button>();
         button.onClick.AddListener(() => { if (BuyItemEvent != null) { BuyItemEvent(item); } });
@@ -289,6 +292,18 @@ public class UIManager : MonoBehaviour
     public void OnQuestsEvent(Quest[] quests)
     {
         RefreshQuestPanel(quests);
+    }
+
+    public void ToggleShopPanel()
+    {
+        bool newActiveState = !shopPanel.gameObject.activeSelf;
+        shopPanel.gameObject.SetActive(newActiveState);
+    }
+
+    public void ToggleQuestPanel()
+    {
+        bool newActiveState = !questPanel.gameObject.activeSelf;
+        questPanel.gameObject.SetActive(newActiveState);
     }
 
     public void RefreshQuestPanel(Quest[] quests)
@@ -333,9 +348,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void OnQuestStatusChange(int questId, string status)
+    public void OnQuestStatusChange(int questId, string status, Color color)
     {
-        questButtons[questId].Find("Status").GetComponent<Text>().text = status;
+        Text statusText = questButtons[questId].Find("Status").GetComponent<Text>();
+        statusText.text = status;
+        statusText.color = color;
+
+        statusText.GetComponent<Shadow>().effectColor = color / 2;
     }
 
     private RectTransform[] GetSlotByInventoryType(InventorySlotType slotType)
@@ -479,7 +498,9 @@ public class UIManager : MonoBehaviour
         Text furyText = floatingPanel.Find("Fury/ValueText").GetComponent<Text>();
         Text hpregenText = floatingPanel.Find("RegenHealth/ValueText").GetComponent<Text>();
 
-        nameText.text = item.itemName;
+        nameText.text = item.itemNameCN;
+        nameText.color = Rarity.GetColorByRarity(item.rarity);
+
         atkText.text = item.spec.atk.ToString();
         defText.text = item.spec.def.ToString();
         dexText.text = item.spec.dex.ToString();
